@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT ANBK - SMK Swasta TI Lohia</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Google: Inter & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3, h4, .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* CSS KHUSUS PRINT KARTU UJIAN */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-area-wrapper, #print-area-wrapper * {
+                visibility: visible;
+            }
+            #print-area-wrapper {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col antialiased select-none">
+
+    <!-- ============================================== -->
+    <!-- 1. HALAMAN LOGIN SISWA & ADMIN -->
+    <!-- ============================================== -->
+    <div id="login-container" class="min-h-screen flex flex-col justify-between bg-gradient-to-b from-blue-50 to-white">
+        <!-- Top bar dekoratif -->
+        <div class="bg-blue-700 h-2 w-full"></div>
+        
+        <div class="flex-1 flex flex-col justify-center items-center px-4 py-8">
+            <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <!-- Header Login -->
+                <div class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white p-6 text-center relative">
+                    <div class="bg-white/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+                        <svg class="w-10 h-10 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11a5 5 0 00-10 0c0 1.005.113 1.98.33 2.918m15.14-.155a9 9 0 0110.203-1.258M15 15h.01M15 11h.01M12 12h.01M12 16h.01M10 11h.01M10 15h.01M10 13h.01M12 14h.01M15 13h.01M9 13h.01"></path>
+                        </svg>
+                    </div>
+                    <h2 class="font-bold text-lg leading-snug uppercase tracking-wide">Ujian Berbasis Sistem CBT</h2>
+                    <p class="text-xs text-blue-200 mt-1 uppercase tracking-wider font-semibold">SMK Swasta TI Lohia</p>
+                    <span class="absolute top-2 right-2 bg-yellow-400 text-blue-950 font-mono text-[9px] font-bold px-2 py-0.5 rounded">NPSN: 6996050</span>
+                </div>
+
+                <!-- Form Login -->
+                <form id="frm-login-siswa" onsubmit="prosesLoginSiswa(event)" class="p-6 sm:p-8 space-y-5">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-3.5 rounded-r-lg">
+                        <p class="text-xs text-blue-800 font-medium leading-relaxed">
+                            <i class="fa-solid fa-circle-info mr-1 text-blue-600"></i>
+                            Silakan masukkan Username & Password ujian Anda. Untuk Guru/Admin, gunakan kredensial khusus administrator.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Username</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </span>
+                            <input type="text" id="login-username" placeholder="Contoh: loh01 atau admin" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-semibold text-gray-800 placeholder-gray-400" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Password / PIN</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                            <input type="password" id="login-password" placeholder="••••••••" class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono text-gray-800 placeholder-gray-400" required>
+                            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                                <i id="eye-icon" class="fa-solid fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition duration-200 flex items-center justify-center space-x-2">
+                        <span>MASUK SISTEM</span>
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Petunjuk akun demo -->
+            <div class="mt-6 max-w-sm w-full space-y-3">
+                <div class="bg-gray-100 p-3 rounded-xl border border-gray-200 text-xs text-gray-600">
+                    <p class="font-bold text-blue-600 mb-1 text-center"><i class="fa-solid fa-key mr-1"></i> Informasi Akun Uji Coba:</p>
+                    <div class="grid grid-cols-2 gap-2 mt-1.5 text-left text-[11px]">
+                        <div class="bg-white p-2 rounded border border-gray-300 flex flex-col justify-between">
+                            <div>
+                                <span class="font-bold text-gray-700 block text-center border-b pb-1 mb-1">Akses Siswa</span>
+                                User: <code class="bg-blue-50 text-blue-700 px-1 font-bold">loh01</code><br>
+                                Pass: <code class="bg-blue-50 text-blue-700 px-1 font-bold">pass01</code>
+                            </div>
+                            <span class="text-[9px] text-gray-400 italic mt-2 block text-center">(Perlu Token Pengawas)</span>
+                        </div>
+                        <div class="bg-white p-2 rounded border border-gray-300 flex flex-col justify-between">
+                            <div>
+                                <span class="font-bold text-indigo-700 block text-center border-b pb-1 mb-1">Akses Admin</span>
+                                User: <code class="bg-indigo-50 text-indigo-700 px-1 font-bold">admin</code><br>
+                                Pass: <code class="bg-indigo-50 text-indigo-700 px-1 font-bold">020222</code>
+                            </div>
+                            <span class="text-[9px] text-indigo-500 italic mt-2 block text-center">(Kelola & Lihat Token)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Login -->
+        <footer class="py-4 border-t border-gray-100 text-center text-xs text-gray-500">
+            &copy; 2026 SMK Swasta Teknologi Informatika Lohia • Aplikasi Ujian Kompatibel ANBK
+        </footer>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 1B. HALAMAN KONFIRMASI BIODATA -->
+    <!-- ============================================== -->
+    <div id="biodata-container" class="hidden min-h-screen flex-col justify-between bg-gray-50">
+        <!-- Header Atas ala Kemendikbud -->
+        <header class="bg-blue-700 text-white px-6 py-4 shadow-md border-b-4 border-yellow-400">
+            <div class="max-w-4xl mx-auto flex justify-between items-center">
+                <span class="font-bold text-sm tracking-wider font-poppins">SMK SWASTA TI LOHIA - KONFIRMASI DATA</span>
+                <span class="text-xs bg-blue-800 px-3 py-1 rounded font-mono">NPSN: 6996050</span>
+            </div>
+        </header>
+
+        <div class="flex-1 flex justify-center items-center p-4">
+            <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-gray-100 border-b border-gray-200 px-6 py-4">
+                    <h3 class="font-bold text-gray-800 text-base font-poppins flex items-center gap-2">
+                        <i class="fa-solid fa-address-card text-blue-600"></i>
+                        <span>Konfirmasi Data Peserta</span>
+                    </h3>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Silakan periksa data diri Anda di bawah ini secara teliti. Jika ada kesalahan data diri, segera laporkan kepada proktor atau pengawas ruang ujian.
+                    </p>
+
+                    <!-- Grid Data Diri Komprehensif -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm bg-gray-50 p-5 rounded-xl border border-gray-100">
+                        <div class="space-y-1">
+                            <span class="text-xs text-gray-400 font-semibold block">Nama Lengkap Peserta</span>
+                            <span id="bio-nama" class="font-bold text-gray-800 text-base">-</span>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-xs text-gray-400 font-semibold block">NISN</span>
+                            <span id="bio-nisn" class="font-mono font-bold text-gray-800 text-base">-</span>
+                        </div>
+                        <div class="space-y-1 border-t pt-2 md:border-t-0 md:pt-0">
+                            <span class="text-xs text-gray-400 font-semibold block">Kelas / Rombel</span>
+                            <span id="bio-kelas" class="font-bold text-gray-800">-</span>
+                        </div>
+                        <div class="space-y-1 border-t pt-2 md:border-t-0 md:pt-0">
+                            <span class="text-xs text-gray-400 font-semibold block">Kompetensi Keahlian / Jurusan</span>
+                            <span id="bio-jurusan" class="font-bold text-gray-800">-</span>
+                        </div>
+                        <div class="space-y-1 border-t pt-2">
+                            <span class="text-xs text-gray-400 font-semibold block">Sesi Pelaksanaan Ujian</span>
+                            <span id="bio-sesi" class="font-bold text-amber-600 font-poppins text-xs px-2.5 py-0.5 bg-amber-50 rounded border border-amber-200 inline-block mt-0.5">-</span>
+                        </div>
+                        <div class="space-y-1 border-t pt-2">
+                            <span class="text-xs text-gray-400 font-semibold block">Mata Pelajaran Ujian</span>
+                            <span id="bio-mapel" class="font-bold text-blue-700">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Input Konfirmasi Kehadiran -->
+                    <div class="space-y-3 pt-2">
+                        <h4 class="font-bold text-xs text-gray-700 uppercase tracking-wider">Lengkapi Konfirmasi:</h4>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Pilih Jenis Kelamin:</label>
+                                <select id="bio-jk" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-blue-500">
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Tanggal Lahir (Konfirmasi):</label>
+                                <input type="date" id="bio-tgl-lahir" value="2008-01-01" class="w-full p-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tombol Navigasi Bawah -->
+                <div class="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-between items-center">
+                    <button onclick="batalBiodataSiswa()" class="px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-lg transition">
+                        <i class="fa-solid fa-arrow-left-long mr-1"></i> Batal / Keluar
+                    </button>
+                    <button onclick="lanjutKeTokenSesi()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition shadow flex items-center gap-1.5">
+                        <span>Konfirmasi & Lanjut</span>
+                        <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="py-4 border-t border-gray-100 text-center text-xs text-gray-400">
+            CBT ANBK • SMK Swasta Teknologi Informatika Lohia
+        </footer>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 1C. HALAMAN MASUKKAN TOKEN -->
+    <!-- ============================================== -->
+    <div id="token-container" class="hidden min-h-screen flex-col justify-between bg-gray-50">
+        <header class="bg-blue-700 text-white px-6 py-4 shadow-md border-b-4 border-yellow-400">
+            <div class="max-w-md mx-auto flex justify-between items-center">
+                <span class="font-bold text-sm tracking-wider font-poppins">SMK SWASTA TI LOHIA - VERIFIKASI TOKEN</span>
+                <span class="text-xs bg-blue-800 px-2 py-0.5 rounded font-mono">ANBK</span>
+            </div>
+        </header>
+
+        <div class="flex-1 flex justify-center items-center p-4">
+            <div class="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-gray-100 border-b border-gray-200 px-6 py-4 text-center">
+                    <h3 class="font-bold text-gray-800 text-base font-poppins">Masukkan Token Soal</h3>
+                    <p class="text-xs text-gray-500 mt-1">Gunakan kode token numerik aktif yang diberikan Pengawas</p>
+                </div>
+
+                <form onsubmit="prosesSubmitToken(event)" class="p-6 space-y-5">
+                    
+                    <!-- Informasi Pengawas (Penyembunyian token dari siswa secara visual) -->
+                    <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-center shadow-inner">
+                        <p class="text-xs text-blue-800 font-semibold flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-key"></i>
+                            <span>Token Dikunci Sesi:</span>
+                        </p>
+                        <p class="text-[11px] text-gray-600 mt-1.5">
+                            Mintalah **6 digit angka token** ujian yang berlaku hari ini kepada Proktor atau Pengawas Ruangan Anda.
+                        </p>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider text-center">Token Akses (6 Angka)</label>
+                        <input type="text" id="inp-token-akses" placeholder="••••••" maxlength="6" inputmode="numeric" class="w-full p-3 border border-gray-300 rounded-xl text-center font-mono font-bold text-2xl tracking-widest focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder-gray-400" required>
+                    </div>
+
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg">
+                        <p class="text-[11px] text-amber-800 leading-relaxed">
+                            * Tombol <strong>"MULAI UJIAN"</strong> akan mengaktifkan penghitung mundur waktu ujian. Pastikan Anda telah siap fisik dan mental sebelum mengkliknya.
+                        </p>
+                    </div>
+
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                        <span>MULAI UJIAN</span>
+                        <i class="fa-solid fa-circle-play"></i>
+                    </button>
+                </form>
+
+                <div class="bg-gray-50 border-t border-gray-200 px-6 py-3 text-center">
+                    <button onclick="batalTokenSesi()" class="text-xs text-gray-500 hover:text-gray-700 underline">
+                        &larr; Kembali ke Biodata
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="py-4 border-t border-gray-100 text-center text-xs text-gray-400">
+            CBT ANBK • SMK Swasta Teknologi Informatika Lohia
+        </footer>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 2. HALAMAN UTAMA APLIKASI UJIAN (Hidden Di Awal) -->
+    <!-- ============================================== -->
+    <div id="app-container" class="hidden flex-col min-h-screen">
+        <!-- HEADER UTAMA (Gaya Biru ANBK) -->
+        <header class="bg-blue-700 text-white shadow-lg border-b-4 border-yellow-400 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-3">
+                
+                <!-- Logo & Identitas Sekolah -->
+                <div class="flex items-center space-x-3 text-center sm:text-left">
+                    <div class="bg-white p-2 rounded-lg shadow-inner flex items-center justify-center w-12 h-12 shrink-0">
+                        <!-- SVG Emblem Logo SMK TI Lohia -->
+                        <svg class="w-8 h-8 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg tracking-wide uppercase font-poppins">SMK Swasta Teknologi Informatika Lohia</h1>
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-xs text-blue-100 mt-0.5">
+                            <span class="bg-blue-800 px-2 py-0.5 rounded font-mono font-semibold">NPSN: 6996050</span>
+                            <span class="hidden sm:inline">•</span>
+                            <span>Asesmen Kompetensi Siswa Mandiri</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informasi Siswa & Timer -->
+                <div class="flex items-center space-x-4 bg-blue-800/60 p-2.5 rounded-lg border border-blue-500/30 w-full sm:w-auto justify-between sm:justify-end">
+                    <div class="text-left">
+                        <p class="text-xs text-blue-200">Peserta Ujian</p>
+                        <p class="text-sm font-semibold text-white font-mono" id="txt-nama-siswa">SISWA_UTAMA_LOHIA</p>
+                    </div>
+                    <div class="h-8 w-[1px] bg-blue-600"></div>
+                    <div class="text-right">
+                        <p class="text-xs text-blue-200">Sisa Waktu</p>
+                        <p class="text-base font-bold text-yellow-300 font-mono tracking-wider" id="txt-timer">02:00:00</p>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- STATUS BAR INTERAKTIF -->
+        <div class="bg-white border-b border-gray-200 py-2 shadow-sm text-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
+                <div class="flex items-center space-x-2 text-gray-600">
+                    <i class="fa-solid fa-file-invoice text-blue-600"></i>
+                    <span class="font-semibold text-gray-700" id="txt-info-mapel">Mata Pelajaran: Belum Ditentukan</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-1">
+                        <span class="text-xs text-gray-500">Ukuran Teks:</span>
+                        <button onclick="ubahUkuranTeks('kecil')" class="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs font-semibold">A-</button>
+                        <button onclick="ubahUkuranTeks('sedang')" class="px-2.5 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold">A</button>
+                        <button onclick="ubahUkuranTeks('besar')" class="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs font-semibold">A+</button>
+                    </div>
+                    <div class="h-4 w-[1px] bg-gray-300"></div>
+                    <button onclick="bukaModalPanduan()" class="text-blue-600 hover:text-blue-800 font-medium flex items-center space-x-1">
+                        <i class="fa-regular fa-circle-question"></i>
+                        <span>Panduan</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTAINER -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6">
+
+            <!-- KIRI: PANEL UTAMA UJIAN (70% Lebar pada Layar Besar) -->
+            <section class="flex-1 flex flex-col gap-4">
+                
+                <!-- Box Soal -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden flex-1 flex flex-col min-h-[480px]">
+                    
+                    <!-- Sub Header Box Soal -->
+                    <div class="bg-gray-50 border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-blue-600 text-white font-bold text-sm px-3 py-1 rounded" id="lbl-no-soal">SOAL NO: 1</span>
+                            <span id="badge-jenis-soal" class="bg-gray-200 text-gray-700 font-semibold text-xs px-2.5 py-1 rounded-full uppercase">Pilihan Ganda</span>
+                        </div>
+                        <div class="text-xs text-gray-500 font-mono">
+                            ID Soal: <span id="lbl-id-soal">LOHIA-001</span>
+                        </div>
+                    </div>
+
+                    <!-- Konten Inti Soal (Teks, Stimulus Gambar, Pilihan) -->
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col" id="container-soal-utama">
+                        
+                        <!-- Stimulus Gambar -->
+                        <div id="box-gambar-soal" class="mb-4 hidden text-center bg-gray-50 p-2 rounded-lg border border-dashed border-gray-300">
+                            <img id="img-soal" src="" alt="Stimulus Soal Ujian" class="max-h-60 mx-auto object-contain rounded shadow-sm">
+                        </div>
+
+                        <!-- Teks Deskripsi Pertanyaan -->
+                        <div id="txt-pertanyaan" class="text-gray-800 font-medium leading-relaxed mb-6 break-words text-base">
+                            Sistem ujian belum terisi soal ujian. Silakan klik tombol <strong>"Menu Input Guru"</strong> di bagian bawah untuk memasukkan soal mata pelajaran secara dinamis atau memuat contoh soal yang disediakan.
+                        </div>
+
+                        <!-- Pilihan Ganda -->
+                        <div id="area-pilihan-ganda" class="space-y-3 mt-auto">
+                            <!-- Pilihan A, B, C, D, E di-render dinamis oleh JavaScript -->
+                        </div>
+
+                        <!-- Jawaban Singkat / Esai -->
+                        <div id="area-jawaban-singkat" class="hidden mt-auto">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Jawaban Anda:</label>
+                            <textarea id="txt-jawaban-singkat-input" oninput="simpanJawabanSingkat(this.value)" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder-gray-400" placeholder="Ketik jawaban singkat/esai Anda di sini secara teliti..."></textarea>
+                        </div>
+
+                    </div>
+
+                    <!-- Tombol Navigasi Bawah ala ANBK -->
+                    <div class="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+                        
+                        <!-- Tombol Kembali -->
+                        <button id="btn-prev" onclick="keSoalSebelumnya()" class="w-full sm:w-auto px-5 py-2.5 bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold rounded-lg transition duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>SOAL SEBELUMNYA</span>
+                        </button>
+
+                        <!-- Checkbox Ragu-ragu -->
+                        <label id="btn-ragu-container" class="w-full sm:w-auto flex items-center justify-center space-x-2 bg-yellow-400 hover:bg-yellow-500 text-yellow-950 font-bold px-6 py-2.5 rounded-lg shadow-sm cursor-pointer transition duration-200">
+                            <input type="checkbox" id="chk-ragu" onchange="tandaiRaguRagu(this.checked)" class="w-4 h-4 rounded text-yellow-600 focus:ring-yellow-500">
+                            <span>RAGU-RAGU</span>
+                        </label>
+
+                        <!-- Tombol Berikutnya / Selesai -->
+                        <button id="btn-next" onclick="keSoalBerikutnya()" class="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition duration-200 flex items-center justify-center space-x-2">
+                            <span>SOAL BERIKUTNYA</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- KANAN: PANEL NAVIGASI SOAL & PERSENTASE PROGRESS (30% Lebar) -->
+            <aside class="w-full lg:w-80 flex flex-col gap-4 shrink-0">
+                
+                <!-- Box Informasi Tes & Sesi -->
+                <div class="bg-gradient-to-br from-blue-700 to-indigo-800 text-white p-5 rounded-xl shadow-md border-b-4 border-blue-900">
+                    <h3 class="font-bold text-sm tracking-wide uppercase text-blue-200 mb-2">Informasi Sesi</h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between border-b border-white/10 pb-1.5">
+                            <span class="text-blue-200">Siswa/User:</span>
+                            <span id="lbl-info-siswa-detil" class="font-semibold text-white">Guest</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-blue-200">Status Sesi:</span>
+                            <span class="bg-green-500 text-white px-2 py-0.5 rounded text-[10px] font-bold animate-pulse">BERJALAN</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Box Grid Navigasi Soal -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-5 flex flex-col flex-1">
+                    <div class="border-b border-gray-200 pb-3 mb-4 flex justify-between items-center">
+                        <h3 class="font-bold text-gray-800 text-sm tracking-tight">NAVIGASI SOAL</h3>
+                        <span id="txt-progression" class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-bold">0 / 0 Terjawab</span>
+                    </div>
+
+                    <!-- Container Grid -->
+                    <div class="grid grid-cols-5 gap-2 overflow-y-auto max-h-[280px] p-1 mb-4" id="grid-navigasi-nomor">
+                        <!-- Nomor Soal akan dirender menggunakan JS -->
+                    </div>
+
+                    <!-- Legend Keterangan Warna Status -->
+                    <div class="mt-auto pt-3 border-t border-gray-100 text-[11px] text-gray-500 space-y-2">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3.5 h-3.5 bg-blue-600 rounded border border-blue-700 shadow-sm"></span>
+                                <span>Soal Aktif</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3.5 h-3.5 bg-gray-700 rounded border border-gray-800 shadow-sm"></span>
+                                <span>Sudah Jawab</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3.5 h-3.5 bg-yellow-400 rounded border border-yellow-500 shadow-sm"></span>
+                                <span>Ragu-ragu</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3.5 h-3.5 bg-white rounded border border-gray-300 shadow-sm"></span>
+                                <span>Belum Jawab</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </main>
+
+        <!-- FLOATING BAR BAWAH: SWITCH GURU / SISWA -->
+        <div class="bg-gray-900 text-white py-3 px-4 sticky bottom-0 z-40 border-t border-gray-800 shadow-2xl">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+                <div class="flex items-center space-x-3 text-center md:text-left">
+                    <span class="flex h-3.5 w-3.5 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-green-500"></span>
+                    </span>
+                    <p class="text-xs text-gray-300">
+                        Aplikasi dalam Mode Ujian Sesi. Guru / Pengawas ingin mengelola token, memantau akun login, atau mengedit soal?
+                    </p>
+                </div>
+                <div class="flex items-center space-x-2 w-full md:w-auto justify-center">
+                    <button onclick="keluarSesiSiswa()" class="text-xs bg-red-800 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-lg transition flex items-center space-x-1">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Keluar Sesi</span>
+                    </button>
+                    <button onclick="pindahTabGuru()" class="text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-4 py-1.5 rounded-lg shadow-lg flex items-center space-x-1 transition">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <span>Menu Pengawas/Guru &rarr;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 3. MODAL PANEL INPUT GURU (FULLSCREEN OVERLAY) -->
+    <!-- ============================================== -->
+    <div id="modal-guru" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl w-full max-w-5xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in duration-200">
+            
+            <!-- Header Modal -->
+            <div class="bg-gray-900 text-white px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-600 p-2 rounded-lg text-white">
+                        <i class="fa-solid fa-file-pen text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-lg font-poppins">Panel Kelola CBT - Guru & Pengawas Ruang</h2>
+                        <p class="text-xs text-gray-400">SMK Swasta Teknologi Informatika Lohia (NPSN: 6996050)</p>
+                    </div>
+                </div>
+                <button onclick="tutupTabGuru()" class="text-gray-400 hover:text-white text-xl p-1.5 hover:bg-gray-800 rounded-lg transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- TAB NAVIGASI PANEL GURU -->
+            <div class="bg-gray-100 px-6 py-2 flex border-b border-gray-200 gap-2 text-sm font-medium overflow-x-auto">
+                <button id="tab-btn-soal" onclick="gantiTabGuru('soal')" class="px-4 py-2 bg-white text-blue-700 rounded-t-lg font-bold shadow-sm border-t-2 border-blue-600 whitespace-nowrap">
+                    <i class="fa-solid fa-book-open mr-1.5"></i> Kelola Soal Ujian
+                </button>
+                <button id="tab-btn-siswa" onclick="gantiTabGuru('siswa')" class="px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap">
+                    <i class="fa-solid fa-users mr-1.5"></i> Kelola Akun Siswa (Login)
+                </button>
+                <button id="tab-btn-cards" onclick="gantiTabGuru('cards')" class="px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap">
+                    <i class="fa-solid fa-address-card mr-1.5"></i> Kelola Kartu Ujian (Download)
+                </button>
+                <button id="tab-btn-token" onclick="gantiTabGuru('token')" class="px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap">
+                    <i class="fa-solid fa-key mr-1.5"></i> Kontrol Token & Sesi
+                </button>
+            </div>
+
+            <!-- Konten Modal (Scrollable) -->
+            <div class="overflow-y-auto flex-1 p-6 space-y-6">
+                
+                <!-- =============== TAB KELOLA SOAL =============== -->
+                <div id="tab-konten-soal" class="space-y-6">
+                    <!-- Quick Set Default / Reset Button -->
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 font-medium">
+                        <div>
+                            <h4 class="font-bold text-blue-900 text-sm">Ingin melakukan uji coba langsung?</h4>
+                            <p class="text-xs text-blue-700 mt-1">Kami menyediakan contoh paket soal siap pakai untuk demo simulasi ANBK.</p>
+                        </div>
+                        <div class="flex space-x-2 shrink-0">
+                            <button onclick="buatSoalDefault('TKJ')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded-md transition">
+                                <i class="fa-solid fa-network-wired mr-1"></i> Paket TKJ
+                            </button>
+                            <button onclick="buatSoalDefault('RPL')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-3 rounded-md transition">
+                                <i class="fa-solid fa-code mr-1"></i> Paket RPL
+                            </button>
+                            <button onclick="resetSemuaSoal()" class="bg-red-500 hover:bg-red-600 text-white text-xs font-bold py-2 px-3 rounded-md transition">
+                                <i class="fa-solid fa-trash mr-1"></i> Kosongkan
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bagian Grid Form Tambah Soal & Daftar Soal Terbuat -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        
+                        <!-- Form Tambah Soal -->
+                        <form id="frm-tambah-soal" onsubmit="simpanSoalBaru(event)" class="lg:col-span-7 space-y-4">
+                            <h3 class="font-bold text-gray-800 border-b pb-2 text-sm uppercase tracking-wide"><i class="fa-solid fa-circle-plus text-blue-600 mr-1.5"></i>Buat Soal Baru</h3>
+                            
+                            <!-- Mata Pelajaran Global -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Mata Pelajaran Ujian:</label>
+                                <input type="text" id="inp-mapel" value="Teknologi Informasi & Jaringan" class="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm font-semibold" required>
+                            </div>
+
+                            <!-- Tipe Soal & ID -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">Tipe Soal:</label>
+                                    <select id="inp-tipe" onchange="ubahTipeSoalForm(this.value)" class="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm">
+                                        <option value="PG">Pilihan Ganda (PG)</option>
+                                        <option value="SINGKAT">Jawaban Singkat / Esai</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">ID Kode Soal:</label>
+                                    <input type="text" id="inp-kode" placeholder="KODE-SOAL-1" class="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm font-mono" required>
+                                </div>
+                            </div>
+
+                            <!-- Stimulus Gambar (Opsional) -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1 flex justify-between">
+                                    <span>URL Gambar Stimulus (Opsional):</span>
+                                    <button type="button" onclick="gunakanGambarDemo()" class="text-[10px] text-blue-600 hover:underline">Gunakan Gambar Demo</button>
+                                </label>
+                                <input type="url" id="inp-gambar" placeholder="https://contoh-link.com/gambar.png (Kosongkan jika tidak ada)" class="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-xs">
+                            </div>
+
+                            <!-- Deskripsi Pertanyaan -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Naskah Pertanyaan:</label>
+                                <textarea id="inp-pertanyaan" rows="3" placeholder="Tuliskan pertanyaan ujian..." class="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm" required></textarea>
+                            </div>
+
+                            <!-- Pilihan Jawaban PG -->
+                            <div id="wrapper-pilihan-guru" class="space-y-3">
+                                <p class="text-xs font-bold text-gray-700">Tentukan Pilihan Jawaban & Jawaban Benar:</p>
+                                
+                                <div class="flex items-center space-x-2">
+                                    <label class="w-12 text-xs font-bold text-gray-600">Pil A:</label>
+                                    <input type="text" id="inp-pil-a" placeholder="Pilihan A" class="flex-1 p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm" required>
+                                    <input type="radio" name="correct-ans" value="A" checked class="w-4 h-4 text-blue-600">
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <label class="w-12 text-xs font-bold text-gray-600">Pil B:</label>
+                                    <input type="text" id="inp-pil-b" placeholder="Pilihan B" class="flex-1 p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm" required>
+                                    <input type="radio" name="correct-ans" value="B" class="w-4 h-4 text-blue-600">
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <label class="w-12 text-xs font-bold text-gray-600">Pil C:</label>
+                                    <input type="text" id="inp-pil-c" placeholder="Pilihan C" class="flex-1 p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm" required>
+                                    <input type="radio" name="correct-ans" value="C" class="w-4 h-4 text-blue-600">
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <label class="w-12 text-xs font-bold text-gray-600">Pil D:</label>
+                                    <input type="text" id="inp-pil-d" placeholder="Pilihan D" class="flex-1 p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm" required>
+                                    <input type="radio" name="correct-ans" value="D" class="w-4 h-4 text-blue-600">
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <label class="w-12 text-xs font-bold text-gray-600">Pil E:</label>
+                                    <input type="text" id="inp-pil-e" placeholder="Pilihan E" class="flex-1 p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm" required>
+                                    <input type="radio" name="correct-ans" value="E" class="w-4 h-4 text-blue-600">
+                                </div>
+                                <span class="text-[10px] text-gray-500 block italic">* Centang bulat di sebelah kanan pilihan untuk menentukan kunci jawaban benar untuk dinilai nanti.</span>
+                            </div>
+
+                            <!-- Jawaban Singkat Core -->
+                            <div id="wrapper-esay-guru" class="hidden">
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Kunci Kata Kunci Jawaban (Opsional):</label>
+                                <input type="text" id="inp-kunci-singkat" placeholder="Misal: Router, IP Address, dll." class="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 text-sm">
+                                <span class="text-[10px] text-gray-500 block italic mt-1">* Digunakan sebagai referensi pembanding koreksi otomatis.</span>
+                            </div>
+
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition duration-200 shadow-md cursor-pointer">
+                                <i class="fa-solid fa-plus-circle mr-1.5"></i>Masukkan ke Bank Soal
+                            </button>
+                        </form>
+
+                        <!-- Daftar Bank Soal Terbuat -->
+                        <div class="lg:col-span-5 flex flex-col">
+                            <h3 class="font-bold text-gray-800 border-b pb-2 text-sm uppercase tracking-wide flex justify-between items-center">
+                                <span><i class="fa-solid fa-database text-blue-600 mr-1.5"></i>Daftar Bank Soal</span>
+                                <span id="txt-total-soal-bank" class="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">0 Soal</span>
+                            </h3>
+
+                            <div id="list-bank-soal" class="flex-1 border border-gray-200 rounded-lg p-3 bg-gray-50 overflow-y-auto max-h-[480px] mt-3 space-y-2">
+                                <div class="text-center py-8 text-gray-400 text-xs">
+                                    <i class="fa-solid fa-folder-open text-3xl mb-2 block text-gray-300"></i>
+                                    <span>Bank soal kosong. Silakan buat soal baru atau klik paket contoh di atas.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- =============== TAB KELOLA AKUN SISWA (LOGIN) =============== -->
+                <div id="tab-konten-siswa" class="hidden space-y-6 animate-fade-in">
+                    <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-r-lg">
+                        <h4 class="font-bold text-indigo-900 text-sm">Manajemen Hak Akses Siswa</h4>
+                        <p class="text-xs text-indigo-700 mt-1">Daftarkan biodata lengkap siswa serta sesi ujian. Siswa akan login menggunakan username dan password yang diatur di bawah.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Form Buat Akun Siswa -->
+                        <div class="lg:col-span-4 bg-gray-50 p-4 rounded-xl border border-gray-200 h-fit space-y-4">
+                            <h3 class="font-bold text-gray-800 border-b pb-1.5 text-xs uppercase tracking-wide">
+                                <i class="fa-solid fa-user-plus text-indigo-600 mr-1.5"></i>Input Data Siswa Baru
+                            </h3>
+                            <form id="frm-tambah-siswa-guru" onsubmit="tambahAkunSiswaBaru(event)" class="space-y-3">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-600 uppercase mb-0.5">Nama Lengkap:</label>
+                                    <input type="text" id="inp-siswa-nama" placeholder="Contoh: Muhammad Fajrin" class="w-full p-2 border border-gray-300 rounded text-xs focus:ring-1 focus:ring-indigo-500" required>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-600 uppercase mb-0.5">NISN (10 Digit Angka):</label>
+                                    <input type="text" id="inp-siswa-nisn" placeholder="Contoh: 0081234567" maxlength="10" inputmode="numeric" class="w-full p-2 border border-gray-300 rounded text-xs font-mono focus:ring-1 focus:ring-indigo-500" required>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-0.5">Kelas:</label>
+                                        <input type="text" id="inp-siswa-kelas" value="XII TKJ 1" placeholder="Contoh: XII TKJ 1" class="w-full p-2 border border-gray-300 rounded text-xs focus:ring-1 focus:ring-indigo-500" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-0.5">Sesi Ujian:</label>
+                                        <select id="inp-siswa-sesi" class="w-full p-2 border border-gray-300 rounded text-xs bg-white focus:ring-1 focus:ring-indigo-500">
+                                            <option value="Sesi 1 (Pagi)">Sesi 1 (Pagi)</option>
+                                            <option value="Sesi 2 (Siang)">Sesi 2 (Siang)</option>
+                                            <option value="Sesi 3 (Sore)">Sesi 3 (Sore)</option>
+                                            <option value="Sesi 4 (Malam)">Sesi 4 (Malam)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-600 uppercase mb-0.5">Jurusan / Kompetensi:</label>
+                                    <select id="inp-siswa-jurusan" class="w-full p-2 border border-gray-300 rounded text-xs bg-white focus:ring-1 focus:ring-indigo-500">
+                                        <option value="Teknik Komputer & Jaringan (TKJ)">Teknik Komputer & Jaringan (TKJ)</option>
+                                        <option value="Rekayasa Perangkat Lunak (RPL)">Rekayasa Perangkat Lunak (RPL)</option>
+                                        <option value="Multi Media (MM)">Multi Media (MM)</option>
+                                        <option value="Desain Komunikasi Visual (DKV)">Desain Komunikasi Visual (DKV)</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 border-t pt-2 mt-2">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-0.5">Username:</label>
+                                        <input type="text" id="inp-siswa-username" placeholder="Siswa_fajrin" class="w-full p-2 border border-gray-300 rounded text-xs font-mono font-bold focus:ring-1 focus:ring-indigo-500" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-gray-600 uppercase mb-0.5">Password/PIN:</label>
+                                        <input type="text" id="inp-siswa-pass" placeholder="Pin123" class="w-full p-2 border border-gray-300 rounded text-xs font-mono focus:ring-1 focus:ring-indigo-500" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-xs transition shadow cursor-pointer">
+                                    <i class="fa-solid fa-save mr-1.5"></i>Simpan Akun Siswa
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Tabel/Daftar Kredensial Siswa Lengkap -->
+                        <div class="lg:col-span-8 flex flex-col">
+                            <h3 class="font-bold text-gray-800 border-b pb-2 text-xs uppercase tracking-wide flex justify-between items-center mb-3">
+                                <span><i class="fa-solid fa-id-card text-indigo-600 mr-1.5"></i>Daftar Kredensial Siswa Aktif</span>
+                                <span id="txt-total-akun-siswa" class="text-xs bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full">0 Akun</span>
+                            </h3>
+
+                            <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm overflow-x-auto max-h-[380px]">
+                                <table class="w-full text-left border-collapse text-[11px]">
+                                    <thead>
+                                        <tr class="bg-gray-100 border-b border-gray-200 text-gray-600 font-semibold">
+                                            <th class="p-3">Nama Siswa / NISN</th>
+                                            <th class="p-3">Kelas / Jurusan</th>
+                                            <th class="p-3">Sesi</th>
+                                            <th class="p-3 font-mono">Username</th>
+                                            <th class="p-3 font-mono">Password</th>
+                                            <th class="p-3 text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbl-body-siswa" class="divide-y divide-gray-200 text-gray-700">
+                                        <!-- Dirender secara dinamis -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <span class="text-[10px] text-gray-500 mt-2 italic">* Siswa login memakai salah satu baris akun di atas. Akun Guru/Admin terproteksi di luar daftar ini.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============== TAB BARU KELOLA KARTU GURU/PENGAWAS (DOWNLOAD KARTU) =============== -->
+                <div id="tab-konten-cards" class="hidden space-y-6 animate-fade-in">
+                    <div class="bg-green-50 border-l-4 border-green-600 p-4 rounded-r-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div>
+                            <h4 class="font-bold text-green-900 text-sm"><i class="fa-solid fa-address-card mr-1"></i> Cetak Kartu Peserta Ujian</h4>
+                            <p class="text-xs text-green-700 mt-1">Cetak kartu ujian satu per satu atau unduh secara masal untuk dibagikan kepada peserta sebelum ujian dimulai.</p>
+                        </div>
+                        <button onclick="cetakKartuMasal()" class="bg-green-600 hover:bg-green-700 text-white font-bold text-xs py-2.5 px-4 rounded-lg shadow transition flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-print"></i>
+                            <span>Cetak / Download Semua Kartu (PDF)</span>
+                        </button>
+                    </div>
+
+                    <!-- Area Render Kartu Ujian Interaktif -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="container-kartu-ujian-admin">
+                        <!-- Kartu-kartu akan dirender dinamis di sini -->
+                    </div>
+                </div>
+
+                <!-- =============== TAB MANAJEMEN TOKEN GURU/PENGAWAS =============== -->
+                <div id="tab-konten-token" class="hidden space-y-6 animate-fade-in">
+                    <div class="bg-amber-50 border-l-4 border-amber-600 p-4 rounded-r-lg">
+                        <h4 class="font-bold text-amber-900 text-sm">Kontrol Token Sesi Real-Time (Khusus 6 Angka)</h4>
+                        <p class="text-xs text-amber-700 mt-1">Ubah atau acak token numerik baru di bawah ini. Token diatur untuk <strong>berotasi otomatis setiap 5 menit</strong> demi meminimalkan potensi kebocoran.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Box Atur Token -->
+                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-gray-800 border-b pb-2 text-sm uppercase tracking-wide mb-4">
+                                    <i class="fa-solid fa-gears text-amber-600 mr-1.5"></i>Atur Kunci Token
+                                </h3>
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-600 mb-1.5">Input Token Baru (6 Digit Angka):</label>
+                                        <input type="text" id="inp-custom-token" placeholder="280526" maxlength="6" inputmode="numeric" class="w-full p-3 border-2 border-gray-300 rounded-lg text-center font-mono font-extrabold tracking-widest text-2xl bg-white focus:border-amber-500 focus:ring-0 text-gray-800" required>
+                                    </div>
+                                    
+                                    <div class="flex gap-2">
+                                        <button type="button" onclick="generateTokenAcak()" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-3 rounded-lg text-xs transition flex items-center justify-center gap-1 cursor-pointer">
+                                            <i class="fa-solid fa-arrows-rotate"></i>
+                                            <span>Generate Angka Acak</span>
+                                        </button>
+                                        <button type="button" onclick="resetTokenBawaan()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2.5 px-3 rounded-lg text-xs transition flex items-center justify-center gap-1 cursor-pointer">
+                                            <i class="fa-solid fa-undo"></i>
+                                            <span>Reset Default</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Live Countdown Indicator -->
+                                    <div class="bg-amber-100/70 border border-amber-200 rounded-xl p-3 text-center mt-3">
+                                        <p class="text-[10px] text-amber-800 font-bold uppercase tracking-wider">
+                                            <i class="fa-regular fa-clock mr-1 animate-pulse"></i> Sisa Waktu Token Sesi:
+                                        </p>
+                                        <p id="lbl-timer-token-admin" class="text-lg font-mono font-extrabold text-amber-950 mt-1">05:00</p>
+                                        <p class="text-[9px] text-amber-600 mt-1 italic">* Token akan diacak ulang otomatis saat waktu di atas menyentuh 00:00.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="simpanTokenKustom()" class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-sm transition shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-save"></i>
+                                <span>Terapkan Token Baru</span>
+                            </button>
+                        </div>
+
+                        <!-- Info Petunjuk Pengawas -->
+                        <div class="bg-white p-6 rounded-xl border border-gray-200 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-gray-800 border-b pb-2 text-sm uppercase tracking-wide mb-3">
+                                    <i class="fa-solid fa-user-shield text-blue-600 mr-1.5"></i>Petunjuk Pengawas Ruang (CBT)
+                                </h3>
+                                <ul class="text-xs text-gray-600 space-y-2.5 list-disc pl-4 leading-relaxed">
+                                    <li>Siswa tidak dapat melihat token ini pada antarmuka mereka sendiri.</li>
+                                    <li>Pengawas dianjurkan untuk **menuliskan 6 digit angka token aktif di papan tulis** kelas saat ujian dimulai.</li>
+                                    <li>Karena token **otomatis berubah setiap 5 menit**, perhatikan sisa waktu hitung mundur dan segera perbarui tulisan di papan tulis jika token berganti.</li>
+                                    <li>Siswa yang **sudah sukses login** dan memverifikasi token tidak akan terganggu atau dikeluarkan saat token berotasi.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-3.5 rounded-lg border border-gray-100 text-[11px] text-gray-500 font-medium">
+                                <span class="text-blue-600 font-bold">Catatan Keamanan:</span> Pastikan untuk selalu merefresh tulisan token di papan tulis agar siswa baru yang ingin melakukan login tidak terhambat.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-between items-center shrink-0">
+                <span class="text-xs text-gray-500 font-mono">SMK Swasta TI Lohia • NPSN 6996050</span>
+                <button onclick="tutupTabGuru()" class="bg-gray-800 hover:bg-gray-700 text-white font-bold text-sm px-6 py-2 rounded-lg transition shadow cursor-pointer">
+                    Selesai & Terapkan &rarr;
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 4. MODAL PANDUAN SISWA -->
+    <!-- ============================================== -->
+    <div id="modal-panduan" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border-t-4 border-blue-600">
+            <h3 class="font-bold text-lg text-gray-900 border-b pb-2 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-blue-600"></i>
+                <span>Panduan Ujian CBT Lohia</span>
+            </h3>
+            <ul class="text-sm text-gray-700 space-y-3 list-disc pl-5">
+                <li>Gunakan navigasi <strong>SOAL SEBELUMNYA</strong> atau <strong>SOAL BERIKUTNYA</strong> untuk berpindah soal.</li>
+                <li>Gunakan tombol <strong>RAGU-RAGU</strong> jika Anda belum yakin dengan jawaban yang Anda pilih. Kotak navigasi akan berubah menjadi <span class="bg-yellow-400 font-semibold px-1 rounded">Kuning</span>.</li>
+                <li>Warna <span class="bg-gray-700 text-white font-semibold px-1 rounded">Abu-Abu</span> pada peta nomor ujian menandakan soal telah terjawab.</li>
+                <li>Setelah seluruh soal selesai dikerjakan, Anda dapat menyelesaikan sesi ujian pada soal terakhir.</li>
+            </ul>
+            <button onclick="tutupModalPanduan()" class="w-full mt-5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition cursor-pointer">
+                Saya Mengerti
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 5. DIALOG DIALOG KUSTOM (MENGGANTIKAN ALERT/CONFIRM) -->
+    <!-- ============================================== -->
+    <div id="dialog-kustom" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col">
+            <!-- Header Dialog -->
+            <div id="dialog-header-bg" class="bg-blue-600 px-6 py-4 text-white flex items-center space-x-2">
+                <span id="dialog-icon-class" class="text-lg"><i class="fa-solid fa-bell"></i></span>
+                <h3 id="dialog-judul" class="font-bold text-base font-poppins">Pemberitahuan</h3>
+            </div>
+            <!-- Body Dialog -->
+            <div class="p-6">
+                <p id="dialog-pesan" class="text-sm text-gray-700 leading-relaxed">Pesan pemberitahuan akan tampil di sini.</p>
+            </div>
+            <!-- Footer Dialog -->
+            <div class="bg-gray-50 px-6 py-3.5 flex justify-end gap-2.5">
+                <button id="dialog-btn-batal" onclick="batalDialogKustom()" class="hidden px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs rounded-lg transition cursor-pointer">Batal</button>
+                <button id="dialog-btn-setuju" onclick="setujuDialogKustom()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition shadow cursor-pointer">Ya, Setuju</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 5B. PRINT AREA WRAPPER (Sangat Penting, Disembunyikan di Layar, Aktif Saat window.print()) -->
+    <!-- ============================================== -->
+    <div id="print-area-wrapper" class="hidden">
+        <!-- Area ini akan diisi secara dinamis oleh JavaScript saat proses cetak kartu dipicu -->
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 6. LOGIKA JAVASCRIPT APLIKASI -->
+    <!-- ============================================== -->
+    <script>
+        // State Management Global
+        let databaseSoal = [];
+        let indexSoalAktif = 0;
+        let jawabanSiswa = {}; // Format key: indexSoal => { value: 'A'/'B'/text, ragu: true/false }
+        let ukuranTeks = 'sedang'; 
+        let dialogConfirmCallback = null;
+        let intervalTimer = null; // Menyimpan objek interval timer pengerjaan soal
+
+        // State Management Token & Rotasi Sesi
+        let sisaWaktuToken = 300; // 5 Menit dalam hitungan detik
+        let intervalTimerToken = null; // Menyimpan objek interval rotasi token
+
+        // Sesi Akun Siswa Lengkap dengan Parameter Baru (Mendukung NISN, Sesi, Jurusan)
+        let daftarSiswa = [
+            { 
+                nama: "Andi Saputra", 
+                nisn: "0081234501", 
+                kelas: "XII TKJ 1", 
+                jurusan: "Teknik Komputer & Jaringan (TKJ)", 
+                sesi: "Sesi 1 (Pagi)", 
+                username: "loh01", 
+                sandi: "pass01" 
+            },
+            { 
+                nama: "Siti Rahma", 
+                nisn: "0081234502", 
+                kelas: "XII RPL 1", 
+                jurusan: "Rekayasa Perangkat Lunak (RPL)", 
+                sesi: "Sesi 1 (Pagi)", 
+                username: "loh02", 
+                sandi: "pass02" 
+            },
+            { 
+                nama: "Fajar Ramadan", 
+                nisn: "0081234503", 
+                kelas: "XII RPL 2", 
+                jurusan: "Rekayasa Perangkat Lunak (RPL)", 
+                sesi: "Sesi 2 (Siang)", 
+                username: "loh03", 
+                sandi: "pass03" 
+            }
+        ];
+        let siswaSedangLogin = null;
+
+        // Token Ujian yang Berlaku secara dinamis (Default wajib berupa 6 digit angka)
+        let tokenUjianAktif = "280526";
+
+        // Data Contoh Paket Soal TKJ
+        const paketTKJ = [
+            {
+                id: "TKJ-01",
+                tipe: "PG",
+                pertanyaan: "Dalam merancang jaringan WAN untuk SMK TI Lohia, Anda membutuhkan perangkat yang dapat menghubungkan segmen IP Address yang berbeda segmen/kelas. Manakah perangkat network yang paling sesuai untuk kebutuhan tersebut?",
+                pilihan: {
+                    A: "Access Point",
+                    B: "Ethernet Switch",
+                    C: "Router Gateway",
+                    D: "Passive Hub",
+                    E: "Repeater"
+                },
+                kunci: "C",
+                gambar: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+            },
+            {
+                id: "TKJ-02",
+                tipe: "PG",
+                pertanyaan: "Sebuah laboratorium komputer di SMK TI Lohia menggunakan IP Address kelas C dengan Network ID 192.168.10.0/26. Berapakah jumlah maksimal host/komputer klien yang dapat terhubung secara aktif pada subnet tersebut?",
+                pilihan: {
+                    A: "254 Host",
+                    B: "126 Host",
+                    C: "62 Host",
+                    D: "30 Host",
+                    E: "14 Host"
+                },
+                kunci: "C",
+                gambar: ""
+            },
+            {
+                id: "TKJ-03",
+                tipe: "SINGKAT",
+                pertanyaan: "Sebutkan perintah dasar pada sistem operasi berbasis Linux Debian / Ubuntu Server yang digunakan untuk menguji konektivitas jaringan antar host menggunakan protokol ICMP!",
+                pilihan: {},
+                kunci: "ping",
+                gambar: ""
+            },
+            {
+                id: "TKJ-04",
+                tipe: "PG",
+                pertanyaan: "Protokol keamanan nirkabel yang menggunakan enkripsi Advanced Encryption Standard (AES) paling mutakhir pada standar Wi-Fi modern adalah...",
+                pilihan: {
+                    A: "WEP (Wired Equivalent Privacy)",
+                    B: "WPA2-PSK",
+                    C: "WPA3",
+                    D: "WPS (Wi-Fi Protected Setup)",
+                    E: "TKIP"
+                },
+                kunci: "C",
+                gambar: ""
+            }
+        ];
+
+        // Data Contoh Paket Soal RPL
+        const paketRPL = [
+            {
+                id: "RPL-01",
+                tipe: "PG",
+                pertanyaan: "Perhatikan blok kode program berikut. Mengapa penulisan elemen pembuka pada skrip markup web harus dideklarasikan secara terstruktur?",
+                pilihan: {
+                    A: "Agar browser tahu tipe dokumen HTML5 yang digunakan",
+                    B: "Hanya sebagai pelengkap tampilan kode agar rapi",
+                    C: "Agar stylesheet CSS dapat terpanggil otomatis tanpa tag link",
+                    D: "Agar website tidak bisa di-hacker oleh penyusup",
+                    E: "Untuk mendefinisikan database relasional"
+                },
+                kunci: "A",
+                gambar: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+            },
+            {
+                id: "RPL-02",
+                tipe: "PG",
+                pertanyaan: "Dalam paradigma Pemrograman Berorientasi Objek (OOP), konsep di mana sebuah kelas turunan mewarisi sifat, method, dan properti dari kelas induk dinamakan...",
+                pilihan: {
+                    A: "Encapsulation (Pengkapsulan)",
+                    B: "Polymorphism (Banyak Bentuk)",
+                    C: "Inheritance (Pewarisan)",
+                    D: "Abstraction (Abstraksi)",
+                    E: "Instantiation (Instansiasi)"
+                },
+                kunci: "C",
+                gambar: ""
+            },
+            {
+                id: "RPL-03",
+                tipe: "SINGKAT",
+                pertanyaan: "Struktur data query yang digunakan dalam basis data relasional untuk mengambil/menampilkan seluruh baris kolom dari tabel bernama 'siswa' adalah... (Gunakan huruf standar SQL)",
+                pilihan: {},
+                kunci: "SELECT * FROM siswa",
+                gambar: ""
+            }
+        ];
+
+        // Inisialisasi awal saat halaman dimuat
+        window.onload = function() {
+            // Load paket default (TKJ)
+            buatSoalDefault('TKJ');
+            
+            // Render Daftar Siswa & Kartu Ujian di Panel Guru
+            renderTabelSiswaGuru();
+            renderKartuUjianAdmin();
+            
+            // Set input token di modal guru dan label verifikasi siswa
+            sinkronisasikanTokenLayar();
+
+            // Jalankan rotasi token otomatis 5 menit
+            mulaiTimerRotasiToken();
+        };
+
+
+        // ==============================================
+        // SINKRONISASI TOKEN SESI
+        // ==============================================
+        function sinkronisasikanTokenLayar() {
+            // Tampilkan token di form pengawas ruang
+            const inputCustomToken = document.getElementById('inp-custom-token');
+            if (inputCustomToken) {
+                inputCustomToken.value = tokenUjianAktif;
+            }
+        }
+
+
+        // ==============================================
+        // FUNGSI UTAMA DIALOG MODERN (PENGGANTI ALERT)
+        // ==============================================
+        function tunjukkanPesanKustom(judul, pesan, jenis = 'info', cbSetuju = null) {
+            const dialog = document.getElementById('dialog-kustom');
+            const dJudul = document.getElementById('dialog-judul');
+            const dPesan = document.getElementById('dialog-pesan');
+            const dHeaderBg = document.getElementById('dialog-header-bg');
+            const dIcon = document.getElementById('dialog-icon-class');
+            const dBtnBatal = document.getElementById('dialog-btn-batal');
+            const dBtnSetuju = document.getElementById('dialog-btn-setuju');
+
+            dJudul.innerText = judul;
+            dPesan.innerText = pesan;
+            dialogConfirmCallback = cbSetuju;
+
+            // Sesuaikan warna tema berdasarkan tipe notifikasi
+            if (jenis === 'sukses') {
+                dHeaderBg.className = "bg-green-600 px-6 py-4 text-white flex items-center space-x-2";
+                dIcon.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+            } else if (jenis === 'error') {
+                dHeaderBg.className = "bg-red-600 px-6 py-4 text-white flex items-center space-x-2";
+                dIcon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+            } else if (jenis === 'konfirmasi') {
+                dHeaderBg.className = "bg-yellow-500 px-6 py-4 text-white flex items-center space-x-2";
+                dIcon.innerHTML = `<i class="fa-solid fa-circle-question"></i>`;
+            } else {
+                dHeaderBg.className = "bg-blue-600 px-6 py-4 text-white flex items-center space-x-2";
+                dIcon.innerHTML = `<i class="fa-solid fa-bell"></i>`;
+            }
+
+            // Tampilkan tombol batal jika bertipe konfirmasi
+            if (jenis === 'konfirmasi') {
+                dBtnBatal.classList.remove('hidden');
+            } else {
+                dBtnBatal.classList.add('hidden');
+            }
+
+            dialog.classList.remove('hidden');
+        }
+
+        function setujuDialogKustom() {
+            document.getElementById('dialog-kustom').classList.add('hidden');
+            if (dialogConfirmCallback) {
+                dialogConfirmCallback();
+            }
+        }
+
+        function batalDialogKustom() {
+            document.getElementById('dialog-kustom').classList.add('hidden');
+            dialogConfirmCallback = null;
+        }
+
+
+        // ==============================================
+        // LOGIKA LOGIN SISWA & ADMIN
+        // ==============================================
+        function prosesLoginSiswa(event) {
+            event.preventDefault();
+            const userInp = document.getElementById('login-username').value.trim();
+            const passInp = document.getElementById('login-password').value.trim();
+
+            // 1. Validasi Akun Admin / Guru (Bypass Biodata & Token)
+            if (userInp.toLowerCase() === 'admin' && passInp === '020222') {
+                siswaSedangLogin = { nama: "ADMINISTRATOR", kelas: "STAF GURU", username: "admin", sandi: "020222" };
+                
+                document.getElementById('txt-nama-siswa').innerText = "ADMINISTRATOR (GURU)";
+                document.getElementById('lbl-info-siswa-detil').innerText = "Akses Penuh Guru / Admin";
+
+                // Sembunyikan login & buka halaman ujian utama langsung untuk kelola
+                document.getElementById('login-container').classList.add('hidden');
+                document.getElementById('app-container').classList.remove('hidden');
+                document.getElementById('app-container').classList.add('flex');
+
+                // Reset field login
+                document.getElementById('login-username').value = "";
+                document.getElementById('login-password').value = "";
+
+                tunjukkanPesanKustom("Login Admin Berhasil", "Selamat datang Bapak/Ibu Guru. Anda masuk sebagai Administrator Sesi. Panel Kelola CBT akan langsung dibuka.", "sukses", function() {
+                    pindahTabGuru();
+                });
+                
+                // Mulai timer default untuk admin (tetapi tidak wajib diselesaikan)
+                jalankanTimerUjian(7200);
+                renderSoal();
+                return;
+            }
+
+            // 2. Validasi Akun Siswa
+            const siswaDitemukan = daftarSiswa.find(s => s.username.toLowerCase() === userInp.toLowerCase() && s.sandi === passInp);
+
+            if (siswaDitemukan) {
+                siswaSedangLogin = siswaDitemukan;
+                
+                // Menuju ke Tahap 2: Tampilkan Biodata untuk dikonfirmasi
+                tampilkanBiodataSiswa();
+            } else {
+                tunjukkanPesanKustom("Gagal Masuk", "Username atau Password yang Anda masukkan salah. Silakan periksa kembali atau hubungi pengawas ujian.", "error");
+            }
+        }
+
+        // Tampilkan halaman biodata komprehensif
+        function tampilkanBiodataSiswa() {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('biodata-container').classList.remove('hidden');
+            document.getElementById('biodata-container').classList.add('flex');
+
+            // Populate data diri lengkap siswa
+            document.getElementById('bio-username').innerText = siswaSedangLogin.username;
+            document.getElementById('bio-nama').innerText = siswaSedangLogin.nama;
+            document.getElementById('bio-nisn').innerText = siswaSedangLogin.nisn || "008xxxxxxx";
+            document.getElementById('bio-kelas').innerText = siswaSedangLogin.kelas;
+            document.getElementById('bio-jurusan').innerText = siswaSedangLogin.jurusan || "Teknik Komputer & Jaringan (TKJ)";
+            document.getElementById('bio-sesi').innerText = siswaSedangLogin.sesi || "Sesi 1 (Pagi)";
+
+            // Ambil nama mapel aktif saat ini
+            const mapelAktif = document.getElementById('inp-mapel').value;
+            document.getElementById('bio-mapel').innerText = mapelAktif;
+        }
+
+        // Batal di halaman biodata
+        function batalBiodataSiswa() {
+            document.getElementById('biodata-container').classList.remove('flex');
+            document.getElementById('biodata-container').classList.add('hidden');
+            document.getElementById('login-container').classList.remove('hidden');
+            siswaSedangLogin = null;
+        }
+
+        // Lanjut dari biodata ke Token
+        function lanjutKeTokenSesi() {
+            document.getElementById('biodata-container').classList.remove('flex');
+            document.getElementById('biodata-container').classList.add('hidden');
+            
+            // Tampilkan halaman token
+            document.getElementById('token-container').classList.remove('hidden');
+            document.getElementById('token-container').classList.add('flex');
+            
+            // Bersihkan field input token lama
+            document.getElementById('inp-token-akses').value = "";
+        }
+
+        // Batal di halaman token (kembali ke biodata)
+        function batalTokenSesi() {
+            document.getElementById('token-container').classList.remove('flex');
+            document.getElementById('token-container').classList.add('hidden');
+            
+            // Tampilkan kembali biodata
+            tampilkanBiodataSiswa();
+        }
+
+        // Proses submit token
+        function prosesSubmitToken(event) {
+            event.preventDefault();
+            const tokenInp = document.getElementById('inp-token-akses').value.trim();
+
+            // Memeriksa token masukan siswa dengan token aktif di sistem pengawas (hanya angka)
+            if (tokenInp === tokenUjianAktif) {
+                // Token Benar! Sembunyikan halaman token & buka ujian utama
+                document.getElementById('token-container').classList.remove('flex');
+                document.getElementById('token-container').classList.add('hidden');
+                
+                document.getElementById('app-container').classList.remove('hidden');
+                document.getElementById('app-container').classList.add('flex');
+
+                // Set data nama ke header pengerjaan soal
+                document.getElementById('txt-nama-siswa').innerText = siswaSedangLogin.nama.toUpperCase();
+                document.getElementById('lbl-info-siswa-detil').innerText = `${siswaSedangLogin.nama} (${siswaSedangLogin.kelas})`;
+
+                // Bersihkan isian form login
+                document.getElementById('login-username').value = "";
+                document.getElementById('login-password').value = "";
+
+                tunjukkanPesanKustom("Token Terverifikasi!", "Selamat! Token valid. Lembar kerja Anda telah dibuka. Selamat mengerjakan ujian, semoga sukses!", "sukses");
+                
+                // Mulai hitung mundur waktu ujian (2 jam = 7200 detik)
+                jalankanTimerUjian(7200);
+                renderSoal();
+            } else {
+                tunjukkanPesanKustom("Token Tidak Valid", "Token yang Anda masukkan salah atau sudah diuji kedaluwarsa oleh Pengawas. Silakan tanyakan Token 6 angka terbaru kepada Pengawas Ruang.", "error");
+            }
+        }
+
+        function keluarSesiSiswa() {
+            tunjukkanPesanKustom("Konfirmasi Keluar", "Apakah Anda ingin keluar dari sesi ujian saat ini? Jawaban Anda yang sudah terisi akan tetap tersimpan.", "konfirmasi", function() {
+                // Hentikan interval timer jika berjalan
+                if (intervalTimer) {
+                    clearInterval(intervalTimer);
+                }
+                
+                siswaSedangLogin = null;
+                jawabanSiswa = {};
+                indexSoalAktif = 0;
+                
+                // Ganti layar ke login
+                document.getElementById('app-container').classList.remove('flex');
+                document.getElementById('app-container').classList.add('hidden');
+                document.getElementById('login-container').classList.remove('hidden');
+            });
+        }
+
+        function togglePasswordVisibility() {
+            const passInp = document.getElementById('login-password');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passInp.type === "password") {
+                passInp.type = "text";
+                eyeIcon.className = "fa-solid fa-eye";
+            } else {
+                passInp.type = "password";
+                eyeIcon.className = "fa-solid fa-eye-slash";
+            }
+        }
+
+
+        // ==============================================
+        // PANEL GURU: MANAJEMEN AKUN & DATA SISWA BARU
+        // ==============================================
+        function gantiTabGuru(tabName) {
+            const tabBtnSoal = document.getElementById('tab-btn-soal');
+            const tabBtnSiswa = document.getElementById('tab-btn-siswa');
+            const tabBtnCards = document.getElementById('tab-btn-cards');
+            const tabBtnToken = document.getElementById('tab-btn-token');
+            
+            const tabKontenSoal = document.getElementById('tab-konten-soal');
+            const tabKontenSiswa = document.getElementById('tab-konten-siswa');
+            const tabKontenCards = document.getElementById('tab-konten-cards');
+            const tabKontenToken = document.getElementById('tab-konten-token');
+
+            // Reset seluruh tombol & konten ke state default
+            tabBtnSoal.className = "px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap";
+            tabBtnSiswa.className = "px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap";
+            tabBtnCards.className = "px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap";
+            tabBtnToken.className = "px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap";
+            
+            tabKontenSoal.classList.add('hidden');
+            tabKontenSiswa.classList.add('hidden');
+            tabKontenCards.classList.add('hidden');
+            tabKontenToken.classList.add('hidden');
+
+            if (tabName === 'soal') {
+                tabBtnSoal.className = "px-4 py-2 bg-white text-blue-700 rounded-t-lg font-bold shadow-sm border-t-2 border-blue-600 whitespace-nowrap";
+                tabKontenSoal.classList.remove('hidden');
+            } else if (tabName === 'siswa') {
+                tabBtnSiswa.className = "px-4 py-2 bg-white text-indigo-700 rounded-t-lg font-bold shadow-sm border-t-2 border-indigo-600 whitespace-nowrap";
+                tabKontenSiswa.classList.remove('hidden');
+            } else if (tabName === 'cards') {
+                tabBtnCards.className = "px-4 py-2 bg-white text-green-700 rounded-t-lg font-bold shadow-sm border-t-2 border-green-600 whitespace-nowrap";
+                tabKontenCards.classList.remove('hidden');
+                renderKartuUjianAdmin(); // Pastikan kartu ujian up-to-date saat dibuka
+            } else if (tabName === 'token') {
+                tabBtnToken.className = "px-4 py-2 bg-white text-amber-700 rounded-t-lg font-bold shadow-sm border-t-2 border-amber-600 whitespace-nowrap";
+                tabKontenToken.classList.remove('hidden');
+            }
+        }
+
+        // Simpan Akun Siswa Baru dengan Tambahan Parameter Sesi, Jurusan, dan NISN
+        function tambahAkunSiswaBaru(event) {
+            event.preventDefault();
+            const nama = document.getElementById('inp-siswa-nama').value.trim();
+            const nisn = document.getElementById('inp-siswa-nisn').value.trim();
+            const kelas = document.getElementById('inp-siswa-kelas').value.trim();
+            const sesi = document.getElementById('inp-siswa-sesi').value;
+            const jurusan = document.getElementById('inp-siswa-jurusan').value;
+            const user = document.getElementById('inp-siswa-username').value.trim().toLowerCase();
+            const pass = document.getElementById('inp-siswa-pass').value.trim();
+
+            // Validasi NISN: Harus 10 angka
+            if (!/^\d{10}$/.test(nisn)) {
+                tunjukkanPesanKustom("Input NISN Salah", "NISN harus berupa tepat 10 digit angka saja.", "error");
+                return;
+            }
+
+            // Cegah duplikasi username
+            if (daftarSiswa.some(s => s.username === user) || user === 'admin') {
+                tunjukkanPesanKustom("Duplikasi Akun", "Username tersebut sudah terdaftar! Gunakan username unik lain.", "error");
+                return;
+            }
+
+            daftarSiswa.push({ 
+                nama: nama, 
+                nisn: nisn, 
+                kelas: kelas, 
+                sesi: sesi, 
+                jurusan: jurusan, 
+                username: user, 
+                sandi: pass 
+            });
+            
+            // Reset fields form pendaftaran siswa
+            document.getElementById('inp-siswa-nama').value = "";
+            document.getElementById('inp-siswa-nisn').value = "";
+            document.getElementById('inp-siswa-kelas').value = "XII TKJ 1";
+            document.getElementById('inp-siswa-username').value = "";
+            document.getElementById('inp-siswa-pass').value = "";
+
+            renderTabelSiswaGuru();
+            renderKartuUjianAdmin(); // Sinkronkan juga area kartu ujian
+            tunjukkanPesanKustom("Siswa Ditambahkan", `Akun untuk siswa ${nama} berhasil didaftarkan dalam database ${sesi}!`, "sukses");
+        }
+
+        function hapusAkunSiswa(idx) {
+            tunjukkanPesanKustom("Hapus Siswa", "Apakah Anda yakin ingin mencabut izin akses masuk siswa ini?", "konfirmasi", function() {
+                const namaDihapus = daftarSiswa[idx].nama;
+                daftarSiswa.splice(idx, 1);
+                renderTabelSiswaGuru();
+                renderKartuUjianAdmin(); // Update area kartu ujian
+                tunjukkanPesanKustom("Akun Dihapus", `Izin akses login untuk ${namaDihapus} telah dinonaktifkan.`, "info");
+            });
+        }
+
+        // Render data siswa dalam format tabel baru yang komprehensif
+        function renderTabelSiswaGuru() {
+            const tBody = document.getElementById('tbl-body-siswa');
+            const totalBadg = document.getElementById('txt-total-akun-siswa');
+            
+            totalBadg.innerText = `${daftarSiswa.length} Akun`;
+
+            if (daftarSiswa.length === 0) {
+                tBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-400">Tidak ada data siswa terdaftar. Tambahkan baru di panel kiri.</td></tr>`;
+                return;
+            }
+
+            tBody.innerHTML = "";
+            daftarSiswa.forEach((siswa, index) => {
+                tBody.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition border-b border-gray-100">
+                        <td class="p-3">
+                            <div class="font-semibold text-gray-800">${siswa.nama}</div>
+                            <div class="text-[10px] text-gray-400 font-mono">NISN: ${siswa.nisn || "-"}</div>
+                        </td>
+                        <td class="p-3">
+                            <div class="text-gray-700">${siswa.kelas}</div>
+                            <div class="text-[10px] text-indigo-600 font-medium">${siswa.jurusan || "-"}</div>
+                        </td>
+                        <td class="p-3">
+                            <span class="bg-amber-50 text-amber-800 text-[10px] px-2 py-0.5 rounded-full border border-amber-200 font-medium font-poppins">
+                                ${siswa.sesi || "Sesi 1"}
+                            </span>
+                        </td>
+                        <td class="p-3 font-mono text-blue-700 font-bold">${siswa.username}</td>
+                        <td class="p-3 font-mono text-gray-600">${siswa.sandi}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="hapusAkunSiswa(${index})" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+
+        // ==============================================
+        // LOGIKA PENYUSUNAN & CETAK KARTU SISWA (BARU)
+        // ==============================================
+        
+        // Membantu merakit template kartu HTML cetak standard proktor
+        function buatTemplateKartuHtml(siswa) {
+            return `
+                <div class="bg-white border-2 border-blue-800 rounded-xl p-4 shadow-md max-w-lg mx-auto mb-6 text-xs text-gray-800 relative overflow-hidden break-inside-avoid">
+                    <!-- Garis batas hiasan ANBK -->
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-700 to-indigo-800"></div>
+                    
+                    <!-- Header Kartu -->
+                    <div class="flex items-center gap-2 border-b-2 border-blue-900 pb-2.5 mb-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded flex items-center justify-center shrink-0 border border-blue-300">
+                            <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-gray-900 tracking-tight uppercase leading-tight font-poppins text-[10px] sm:text-xs">KARTU PESERTA SIMULASI CBT</h4>
+                            <p class="text-[9px] text-blue-800 font-bold uppercase leading-none mt-0.5">SMK Swasta Teknologi Informatika Lohia</p>
+                            <p class="text-[8px] text-gray-500 font-mono leading-none mt-0.5">NPSN: 6996050 | Kendari, Sulawesi Tenggara</p>
+                        </div>
+                    </div>
+
+                    <!-- Detail Data Kartu -->
+                    <div class="flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+                        <!-- Foto Siswa (Avatar Standard Cetak) -->
+                        <div class="w-20 h-24 bg-gray-100 border border-gray-300 rounded flex flex-col items-center justify-center shrink-0 shadow-inner relative overflow-hidden">
+                            <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
+                                <i class="fa-solid fa-user-tie text-3xl mb-1 text-gray-300"></i>
+                                <span class="text-[8px] font-bold text-gray-400 font-poppins">SMK TI</span>
+                            </div>
+                            <div class="absolute bottom-0 w-full bg-blue-700 text-white text-[7px] py-0.5 text-center font-bold tracking-wider">FOTO 3X4</div>
+                        </div>
+
+                        <!-- Isian Data Identitas Kunci -->
+                        <div class="flex-1 space-y-1.5 w-full">
+                            <table class="w-full text-[10px]">
+                                <tr class="align-top">
+                                    <td class="font-semibold text-gray-500 w-24">Nama Lengkap</td>
+                                    <td class="px-1 text-gray-400">:</td>
+                                    <td class="font-bold text-gray-900 uppercase">${siswa.nama}</td>
+                                </tr>
+                                <tr class="align-top">
+                                    <td class="font-semibold text-gray-500">NISN</td>
+                                    <td class="px-1 text-gray-400">:</td>
+                                    <td class="font-mono text-gray-800 font-semibold">${siswa.nisn || "-"}</td>
+                                </tr>
+                                <tr class="align-top">
+                                    <td class="font-semibold text-gray-500">Kelas / Rombel</td>
+                                    <td class="px-1 text-gray-400">:</td>
+                                    <td class="text-gray-800">${siswa.kelas}</td>
+                                </tr>
+                                <tr class="align-top">
+                                    <td class="font-semibold text-gray-500">Keahlian</td>
+                                    <td class="px-1 text-gray-400">:</td>
+                                    <td class="text-gray-800 font-medium">${siswa.jurusan || "-"}</td>
+                                </tr>
+                                <tr class="align-top">
+                                    <td class="font-semibold text-gray-500">Sesi Sesi</td>
+                                    <td class="px-1 text-gray-400">:</td>
+                                    <td class="font-bold text-amber-700">${siswa.sesi || "Sesi 1"}</td>
+                                </tr>
+                            </table>
+
+                            <!-- Kotak Kredensial Login Siswa (Sangat Penting) -->
+                            <div class="bg-gray-100 border border-gray-300 rounded-lg p-2 mt-2">
+                                <div class="grid grid-cols-2 gap-2 text-[10px]">
+                                    <div>
+                                        <span class="text-[8px] text-gray-400 font-bold block uppercase leading-none">Username</span>
+                                        <span class="font-mono font-bold text-blue-700">${siswa.username}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[8px] text-gray-400 font-bold block uppercase leading-none">Password / PIN</span>
+                                        <span class="font-mono font-bold text-gray-800">${siswa.sandi}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Ttd Kartu -->
+                    <div class="mt-4 pt-2 border-t border-dashed border-gray-300 flex justify-between items-end">
+                        <div class="text-[8px] text-gray-400 font-mono italic">
+                            * Simpan kartu ini baik-baik.<br>Dilarang membawa catatan ke komputer.
+                        </div>
+                        <div class="text-right text-[8px] leading-tight shrink-0 mr-2">
+                            <p class="text-gray-500">Kendari, Mei 2026</p>
+                            <p class="font-bold text-gray-800 mt-0.5">Kepala Proktor CBT</p>
+                            <div class="h-6 w-16 mx-auto my-0.5 bg-contain bg-no-repeat opacity-45" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/f/f8/Signature_of_Robert_Adler.svg');"></div>
+                            <p class="font-semibold text-gray-700 border-t border-gray-400 pt-0.5">Panitia Pelaksana</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Kartu di Tab Admin interaktif
+        function renderKartuUjianAdmin() {
+            const container = document.getElementById('container-kartu-ujian-admin');
+            if (!container) return;
+
+            if (daftarSiswa.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-2 text-center py-12 text-gray-400 text-sm">
+                        <i class="fa-solid fa-address-card text-5xl mb-3 block text-gray-300"></i>
+                        <span>Belum ada data siswa terdaftar. Silakan tambahkan siswa di tab Kelola Akun.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = "";
+            daftarSiswa.forEach((siswa, index) => {
+                const cardTemplate = buatTemplateKartuHtml(siswa);
+                
+                // Tambahkan pembungkus dengan tombol kontrol interaktif untuk admin
+                container.innerHTML += `
+                    <div class="bg-gray-100 p-4 rounded-xl border border-gray-200 relative group hover:border-gray-300 transition flex flex-col justify-between">
+                        <!-- Render Kartu -->
+                        <div class="flex-1">
+                            ${cardTemplate}
+                        </div>
+                        
+                        <!-- Panel Kontrol Aksi Cetak Kartu Individual -->
+                        <div class="mt-3 pt-3 border-t border-gray-200 flex justify-end gap-2 no-print">
+                            <button onclick="cetakKartuSiswaTunggal(${index})" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1.5 px-3.5 rounded-md shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-print"></i>
+                                <span>Cetak Kartu</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Cetak Kartu Tunggal Siswa
+        function cetakKartuSiswaTunggal(index) {
+            const siswa = daftarSiswa[index];
+            const printWrapper = document.getElementById('print-area-wrapper');
+            
+            // Isi print wrapper dengan template kartu tunggal
+            printWrapper.innerHTML = `
+                <div class="p-8 flex justify-center items-center min-h-screen bg-white">
+                    ${buatTemplateKartuHtml(siswa)}
+                </div>
+            `;
+            
+            // Trigger cetak browser
+            window.print();
+            
+            // Bersihkan kembali print wrapper
+            printWrapper.innerHTML = "";
+        }
+
+        // Cetak Semua Kartu Siswa Secara Masal
+        function cetakKartuMasal() {
+            const printWrapper = document.getElementById('print-area-wrapper');
+            
+            let semuaKartuHtml = `<div class="p-6 grid grid-cols-2 gap-4 bg-white max-w-7xl mx-auto">`;
+            
+            daftarSiswa.forEach((siswa, index) => {
+                semuaKartuHtml += `
+                    <div class="p-2 break-inside-avoid">
+                        ${buatTemplateKartuHtml(siswa)}
+                    </div>
+                `;
+                
+                // Berikan jeda halaman cetak setiap 4 kartu agar tidak berantakan
+                if ((index + 1) % 4 === 0 && index !== daftarSiswa.length - 1) {
+                    semuaKartuHtml += `</div><div class="page-break"></div><div class="p-6 grid grid-cols-2 gap-4 bg-white max-w-7xl mx-auto">`;
+                }
+            });
+            
+            semuaKartuHtml += `</div>`;
+            printWrapper.innerHTML = semuaKartuHtml;
+
+            // Trigger cetak browser
+            window.print();
+
+            // Bersihkan kembali print wrapper
+            printWrapper.innerHTML = "";
+        }
+
+
+        // ==============================================
+        // PANEL GURU: LOGIKA ROTASI & KONTROL TOKEN 5 MENIT (HANYA ANGKA)
+        // ==============================================
+        function mulaiTimerRotasiToken() {
+            // Bersihkan timer rotasi token jika sudah berjalan sebelumnya
+            if (intervalTimerToken) {
+                clearInterval(intervalTimerToken);
+            }
+
+            sisaWaktuToken = 300; // Reset ke 5 Menit (300 detik)
+            updateTampilanTimerTokenAdmin();
+
+            intervalTimerToken = setInterval(function() {
+                if (sisaWaktuToken > 0) {
+                    sisaWaktuToken--;
+                } else {
+                    // Ketika waktu habis, secara otomatis acak token baru
+                    generateTokenAcakOtomatis();
+                    sisaWaktuToken = 300; // Mulai hitung mundur 5 menit baru
+                }
+                updateTampilanTimerTokenAdmin();
+            }, 1000);
+        }
+
+        function updateTampilanTimerTokenAdmin() {
+            const menit = Math.floor(sisaWaktuToken / 60);
+            const detik = sisaWaktuToken % 60;
+
+            const formatMenit = menit < 10 ? "0" + menit : menit;
+            const formatDetik = detik < 10 ? "0" + detik : detik;
+
+            const labelTimerToken = document.getElementById('lbl-timer-token-admin');
+            if (labelTimerToken) {
+                labelTimerToken.innerText = `${formatMenit}:${formatDetik}`;
+            }
+        }
+
+        function generateTokenAcakOtomatis() {
+            const karakter = "0123456789";
+            let hasilToken = "";
+            for (let i = 0; i < 6; i++) {
+                hasilToken += karakter.charAt(Math.floor(Math.random() * karakter.length));
+            }
+            tokenUjianAktif = hasilToken;
+            sinkronisasikanTokenLayar();
+            console.log(`[AUTOROTASI] Token berubah otomatis: ${hasilToken}`);
+        }
+
+        function generateTokenAcak() {
+            // Karakter diatur hanya angka saja untuk memenuhi kebutuhan token numerik
+            const karakter = "0123456789";
+            let hasilToken = "";
+            for (let i = 0; i < 6; i++) {
+                hasilToken += karakter.charAt(Math.floor(Math.random() * karakter.length));
+            }
+            document.getElementById('inp-custom-token').value = hasilToken;
+        }
+
+        function resetTokenBawaan() {
+            document.getElementById('inp-custom-token').value = "280526";
+        }
+
+        function simpanTokenKustom() {
+            const tokenBaru = document.getElementById('inp-custom-token').value.trim();
+
+            // Validasi format kustom: Harus tepat 6 digit dan semuanya angka
+            if (!/^\d{6}$/.test(tokenBaru)) {
+                tunjukkanPesanKustom("Format Tidak Sesuai", "Kode Token harus terdiri atas tepat 6 digit angka (0-9). Huruf dan simbol tidak diperbolehkan.", "error");
+                return;
+            }
+
+            tokenUjianAktif = tokenBaru;
+            sinkronisasikanTokenLayar();
+
+            // Setel ulang timer rotasi token dari awal untuk durasi token kustom yang baru diset
+            mulaiTimerRotasiToken();
+
+            tunjukkanPesanKustom("Token Diperbarui!", `Kunci token ujian baru [ ${tokenBaru} ] berhasil diterapkan ke sistem. Waktu hitung mundur 5 menit disetel ulang.`, "sukses");
+        }
+
+
+        // ==============================================
+        // TIMER PENGERJAAN SOAL UJIAN
+        // ==============================================
+        function jalankanTimerUjian(durasiDetik) {
+            // Bersihkan timer lama jika ada
+            if (intervalTimer) {
+                clearInterval(intervalTimer);
+            }
+
+            let timer = durasiDetik;
+            const display = document.getElementById('txt-timer');
+            
+            intervalTimer = setInterval(function() {
+                let hours = parseInt(timer / 3600, 10);
+                let minutes = parseInt((timer % 3600) / 60, 10);
+                let seconds = parseInt(timer % 60, 10);
+
+                hours = hours < 10 ? "0" + hours : hours;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.innerText = hours + ":" + minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(intervalTimer);
+                    display.innerText = "WAKTU HABIS";
+                    tunjukkanPesanKustom("Waktu Selesai", "Waktu ujian simulasi Anda telah habis! Sistem mengirimkan jawaban otomatis.", "error", function() {
+                        kirimJawabanFinal();
+                    });
+                }
+            }, 1000);
+        }
+
+
+        // ==============================================
+        // CORE RENDER SOAL UJIAN
+        // ==============================================
+        function renderSoal() {
+            const containerSoal = document.getElementById('container-soal-utama');
+            const lblNoSoal = document.getElementById('lbl-no-soal');
+            const badgeJenisSoal = document.getElementById('badge-jenis-soal');
+            const lblIdSoal = document.getElementById('lbl-id-soal');
+            const boxGambarSoal = document.getElementById('box-gambar-soal');
+            const imgSoal = document.getElementById('img-soal');
+            const txtPertanyaan = document.getElementById('txt-pertanyaan');
+            const areaPG = document.getElementById('area-pilihan-ganda');
+            const areaSingkat = document.getElementById('area-jawaban-singkat');
+            const inpSingkatVal = document.getElementById('txt-jawaban-singkat-input');
+            const chkRagu = document.getElementById('chk-ragu');
+
+            if (databaseSoal.length === 0) {
+                lblNoSoal.innerText = "KOSONG";
+                badgeJenisSoal.innerText = "-";
+                lblIdSoal.innerText = "LOHIA-N/A";
+                boxGambarSoal.classList.add('hidden');
+                txtPertanyaan.innerHTML = `<span class="text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Belum ada soal ujian dimasukkan.</span><br>Silakan klik tombol <strong>"Menu Input Guru &rarr;"</strong> di kanan bawah untuk mengisi bank soal mata pelajaran.`;
+                areaPG.innerHTML = "";
+                areaSingkat.classList.add('hidden');
+                document.getElementById('btn-prev').disabled = true;
+                document.getElementById('btn-next').disabled = true;
+                perbaruiDaftarNavigasi();
+                return;
+            }
+
+            const soal = databaseSoal[indexSoalAktif];
+            lblNoSoal.innerText = `SOAL NO: ${indexSoalAktif + 1}`;
+            lblIdSoal.innerText = soal.id;
+            txtPertanyaan.innerText = soal.pertanyaan;
+
+            // Atur Ukuran Teks Pertanyaan
+            if (ukuranTeks === 'kecil') {
+                txtPertanyaan.className = "text-gray-800 font-medium leading-relaxed mb-6 break-words text-sm";
+            } else if (ukuranTeks === 'besar') {
+                txtPertanyaan.className = "text-gray-800 font-medium leading-relaxed mb-6 break-words text-xl";
+            } else {
+                txtPertanyaan.className = "text-gray-800 font-medium leading-relaxed mb-6 break-words text-base";
+            }
+
+            // Tampilkan Gambar Stimulus Jika Ada
+            if (soal.gambar && soal.gambar.trim() !== "") {
+                imgSoal.src = soal.gambar;
+                boxGambarSoal.classList.remove('hidden');
+                imgSoal.onerror = function() {
+                    boxGambarSoal.classList.add('hidden');
+                };
+            } else {
+                boxGambarSoal.classList.add('hidden');
+            }
+
+            // Atur Render Berdasarkan Tipe Soal
+            if (soal.tipe === "PG") {
+                badgeJenisSoal.innerText = "Pilihan Ganda";
+                badgeJenisSoal.className = "bg-blue-100 text-blue-800 font-semibold text-xs px-2.5 py-1 rounded-full uppercase";
+                areaPG.classList.remove('hidden');
+                areaSingkat.classList.add('hidden');
+
+                // Render Pilihan PG (A sampai E)
+                areaPG.innerHTML = "";
+                const pilihanKunci = ['A', 'B', 'C', 'D', 'E'];
+                
+                pilihanKunci.forEach(pilar => {
+                    if (soal.pilihan[pilar] && soal.pilihan[pilar].trim() !== "") {
+                        const isTerpilih = (jawabanSiswa[indexSoalAktif] && jawabanSiswa[indexSoalAktif].value === pilar);
+                        const kelasBg = isTerpilih ? 'border-blue-600 bg-blue-50/70 text-blue-900 shadow-sm' : 'border-gray-200 hover:bg-gray-50 text-gray-700 bg-white';
+                        const kelasBadge = isTerpilih ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700';
+
+                        areaPG.innerHTML += `
+                            <div onclick="simpanJawabanPG('${pilar}')" class="flex items-center p-3.5 border-2 rounded-xl cursor-pointer transition duration-150 ${kelasBg}">
+                                <div class="w-7 h-7 flex items-center justify-center rounded-full font-bold text-sm shrink-0 mr-3 ${kelasBadge}">
+                                    ${pilar}
+                                </div>
+                                <div class="text-sm font-medium leading-tight">${soal.pilihan[pilar]}</div>
+                            </div>
+                        `;
+                    }
+                });
+
+            } else {
+                // Tipe JAWABAN SINGKAT
+                badgeJenisSoal.innerText = "Isian Singkat";
+                badgeJenisSoal.className = "bg-purple-100 text-purple-800 font-semibold text-xs px-2.5 py-1 rounded-full uppercase";
+                areaPG.classList.add('hidden');
+                areaSingkat.classList.remove('hidden');
+
+                const jawabanTersimpan = jawabanSiswa[indexSoalAktif] ? jawabanSiswa[indexSoalAktif].value : "";
+                inpSingkatVal.value = jawabanTersimpan;
+            }
+
+            chkRagu.checked = (jawabanSiswa[indexSoalAktif] && jawabanSiswa[indexSoalAktif].ragu === true);
+            document.getElementById('btn-prev').disabled = (indexSoalAktif === 0);
+            
+            // Tombol berikutnya / selesai
+            const btnNext = document.getElementById('btn-next');
+            if (indexSoalAktif === databaseSoal.length - 1) {
+                btnNext.innerHTML = `<span>SELESAI UJIAN</span> <i class="fa-solid fa-circle-check"></i>`;
+                btnNext.className = "w-full sm:w-auto px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition duration-200 flex items-center justify-center space-x-2 shadow cursor-pointer";
+            } else {
+                btnNext.innerHTML = `<span>SOAL BERIKUTNYA</span> <i class="fa-solid fa-arrow-right"></i>`;
+                btnNext.className = "w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition duration-200 flex items-center justify-center space-x-2 cursor-pointer";
+            }
+
+            perbaruiDaftarNavigasi();
+        }
+
+        // Penyimpanan Jawaban Siswa
+        function simpanJawabanPG(pilihan) {
+            const raguStatus = jawabanSiswa[indexSoalAktif] ? jawabanSiswa[indexSoalAktif].ragu : false;
+            jawabanSiswa[indexSoalAktif] = { value: pilihan, ragu: raguStatus };
+            renderSoal();
+        }
+
+        // Penanganan isian singkat
+        function simpanJawabanSingkat(teks) {
+            const raguStatus = jawabanSiswa[indexSoalAktif] ? jawabanSiswa[indexSoalAktif].ragu : false;
+            jawabanSiswa[indexSoalAktif] = { value: teks, ragu: raguStatus };
+            perbaruiDaftarNavigasi();
+        }
+
+        // Status ragu-ragu
+        function tandaiRaguRagu(isChecked) {
+            if (!jawabanSiswa[indexSoalAktif]) {
+                jawabanSiswa[indexSoalAktif] = { value: "", ragu: isChecked };
+            } else {
+                jawabanSiswa[indexSoalAktif].ragu = isChecked;
+            }
+            renderSoal();
+        }
+
+
+        // ==============================================
+        // NAVIGASI TOMBOL SOAL
+        // ==============================================
+        function keSoalSebelumnya() {
+            if (indexSoalAktif > 0) {
+                indexSoalAktif--;
+                renderSoal();
+            }
+        }
+
+        // Penanganan navigasi ke soal berikutnya
+        function keSoalBerikutnya() {
+            if (indexSoalAktif < databaseSoal.length - 1) {
+                indexSoalAktif++;
+                renderSoal();
+            } else {
+                selesaikanUjianSiswa();
+            }
+        }
+
+        function lompatKeSoal(index) {
+            indexSoalAktif = index;
+            renderSoal();
+        }
+
+
+        // ==============================================
+        // SELESAIKAN UJIAN
+        // ==============================================
+        function selesaikanUjianSiswa() {
+            let jumlahTerjawab = 0;
+            let adaRagu = false;
+            
+            databaseSoal.forEach((_, i) => {
+                if (jawabanSiswa[i] && jawabanSiswa[i].value !== "") {
+                    jumlahTerjawab++;
+                }
+                if (jawabanSiswa[i] && jawabanSiswa[i].ragu) {
+                    adaRagu = true;
+                }
+            });
+
+            const statusBelumSelesai = databaseSoal.length - jumlahTerjawab;
+            let pesanKonfirmasi = `Apakah Anda yakin ingin mengakhiri sesi ujian CBT ini?\n\n✔ Soal Terjawab: ${jumlahTerjawab} dari ${databaseSoal.length}\n✖ Belum Terjawab: ${statusBelumSelesai}`;
+            
+            if (adaRagu) {
+                pesanKonfirmasi += `\n\n⚠️ PERINGATAN: Masih ada beberapa nomor soal yang Anda tandai RAGU-RAGU!`;
+            }
+
+            tunjukkanPesanKustom("Kirim Lembar Jawaban?", pesanKonfirmasi, "konfirmasi", function() {
+                kirimJawabanFinal();
+            });
+        }
+
+        function kirimJawabanFinal() {
+            // Hentikan interval timer jika berjalan
+            if (intervalTimer) {
+                clearInterval(intervalTimer);
+            }
+
+            let benar = 0;
+            let salah = 0;
+            
+            databaseSoal.forEach((soal, i) => {
+                const ansSiswa = jawabanSiswa[i] ? jawabanSiswa[i].value.toString().trim().toLowerCase() : "";
+                const kunciSoal = soal.kunci ? soal.kunci.toString().trim().toLowerCase() : "";
+                
+                if (ansSiswa === kunciSoal && ansSiswa !== "") {
+                    benar++;
+                } else {
+                    salah++;
+                }
+            });
+
+            const nilaiAkhir = Math.round((benar / databaseSoal.length) * 100);
+            const namaSiswaInfo = siswaSedangLogin ? siswaSedangLogin.nama : "GUEST";
+            
+            tunjukkanPesanKustom(
+                "Ujian Selesai!",
+                `Selamat, lembar jawaban Anda berhasil dikirim ke server SMK S TI Lohia.\n\nSiswa: ${namaSiswaInfo}\nSkor Benar: ${benar}\nSalah/Kosong: ${salah}\nNilai Hasil Ujian: ${nilaiAkhir}`,
+                "sukses",
+                function() {
+                    // Reset ujian & paksa logout kembali ke halaman login utama
+                    siswaSedangLogin = null;
+                    jawabanSiswa = {};
+                    indexSoalAktif = 0;
+                    document.getElementById('app-container').classList.remove('flex');
+                    document.getElementById('app-container').classList.add('hidden');
+                    document.getElementById('login-container').classList.remove('hidden');
+                }
+            );
+        }
+
+        // Render Panel Navigasi Grid Kanan
+        function perbaruiDaftarNavigasi() {
+            const gridNav = document.getElementById('grid-navigasi-nomor');
+            const txtProgress = document.getElementById('txt-progression');
+            
+            gridNav.innerHTML = "";
+            let terisi = 0;
+
+            databaseSoal.forEach((_, i) => {
+                const jawab = jawabanSiswa[i];
+                let bgStyle = "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"; 
+                
+                if (jawab && jawab.value && jawab.value.trim() !== "") {
+                    terisi++;
+                    if (jawab.ragu) {
+                        bgStyle = "bg-yellow-400 border-yellow-500 text-yellow-950 font-bold";
+                    } else {
+                        bgStyle = "bg-gray-700 border-gray-800 text-white font-semibold";
+                    }
+                } else if (jawab && jawab.ragu) {
+                    if (jawab.ragu) {
+                        bgStyle = "bg-yellow-400 border-yellow-500 text-yellow-950 font-bold";
+                    }
+                }
+
+                if (i === indexSoalAktif) {
+                    bgStyle += " ring-4 ring-blue-500/70 border-blue-600 scale-105 font-bold text-blue-900";
+                }
+
+                gridNav.innerHTML += `
+                    <button onclick="lompatKeSoal(${i})" class="h-11 border-2 rounded-xl text-sm transition-all flex items-center justify-center font-mono cursor-pointer ${bgStyle}">
+                        ${i + 1}
+                    </button>
+                `;
+            });
+
+            txtProgress.innerText = `${terisi} / ${databaseSoal.length} Terjawab`;
+        }
+
+
+        // ==============================================
+        // GURU: KELOLA SOAL UJIAN
+        // ==============================================
+        function ubahTipeSoalForm(tipe) {
+            const wrapperPG = document.getElementById('wrapper-pilihan-guru');
+            const wrapperEsay = document.getElementById('wrapper-esay-guru');
+            
+            if (tipe === "PG") {
+                wrapperPG.classList.remove('hidden');
+                wrapperEsay.classList.add('hidden');
+                document.getElementById('inp-pil-a').required = true;
+                document.getElementById('inp-pil-b').required = true;
+                document.getElementById('inp-pil-c').required = true;
+                document.getElementById('inp-pil-d').required = true;
+                document.getElementById('inp-pil-e').required = true;
+            } else {
+                wrapperPG.classList.add('hidden');
+                wrapperEsay.classList.remove('hidden');
+                document.getElementById('inp-pil-a').required = false;
+                document.getElementById('inp-pil-b').required = false;
+                document.getElementById('inp-pil-c').required = false;
+                document.getElementById('inp-pil-d').required = false;
+                document.getElementById('inp-pil-e').required = false;
+            }
+        }
+
+        function simpanSoalBaru(event) {
+            event.preventDefault();
+            
+            const mapel = document.getElementById('inp-mapel').value;
+            const tipe = document.getElementById('inp-tipe').value;
+            const kode = document.getElementById('inp-kode').value;
+            const gambar = document.getElementById('inp-gambar').value;
+            const pertanyaan = document.getElementById('inp-pertanyaan').value;
+
+            let soalBaru = {
+                id: kode,
+                tipe: tipe,
+                pertanyaan: pertanyaan,
+                gambar: gambar,
+                pilihan: {},
+                kunci: ""
+            };
+
+            if (tipe === "PG") {
+                soalBaru.pilihan = {
+                    A: document.getElementById('inp-pil-a').value,
+                    B: document.getElementById('inp-pil-b').value,
+                    C: document.getElementById('inp-pil-c').value,
+                    D: document.getElementById('inp-pil-d').value,
+                    E: document.getElementById('inp-pil-e').value,
+                };
+                
+                const radioKunci = document.getElementsByName('correct-ans');
+                for (let i = 0; i < radioKunci.length; i++) {
+                    if (radioKunci[i].checked) {
+                        soalBaru.kunci = radioKunci[i].value;
+                        break;
+                    }
+                }
+            } else {
+                soalBaru.kunci = document.getElementById('inp-kunci-singkat').value;
+            }
+
+            databaseSoal.push(soalBaru);
+            document.getElementById('txt-info-mapel').innerText = "Mata Pelajaran: " + mapel;
+
+            // Reset field naskah
+            document.getElementById('inp-pertanyaan').value = "";
+            document.getElementById('inp-kode').value = "LOHIA-SOAL-" + (databaseSoal.length + 1);
+            document.getElementById('inp-gambar').value = "";
+            if (tipe === "PG") {
+                document.getElementById('inp-pil-a').value = "";
+                document.getElementById('inp-pil-b').value = "";
+                document.getElementById('inp-pil-c').value = "";
+                document.getElementById('inp-pil-d').value = "";
+                document.getElementById('inp-pil-e').value = "";
+            } else {
+                document.getElementById('inp-kunci-singkat').value = "";
+            }
+
+            renderSoal();
+            renderDaftarBankSoalGuru();
+            tunjukkanPesanKustom("Soal Tersimpan", `Soal berkode ${kode} berhasil ditambahkan ke bank soal.`, "sukses");
+        }
+
+        function renderDaftarBankSoalGuru() {
+            const container = document.getElementById('list-bank-soal');
+            const totalBadg = document.getElementById('txt-total-soal-bank');
+            
+            totalBadg.innerText = `${databaseSoal.length} Soal`;
+
+            if (databaseSoal.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-400 text-xs">
+                        <i class="fa-solid fa-folder-open text-3xl mb-2 block text-gray-300"></i>
+                        <span>Bank soal kosong. Silakan buat soal baru atau klik paket contoh di atas.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = "";
+            databaseSoal.forEach((soal, index) => {
+                const tipeBadg = soal.tipe === "PG" ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700";
+                
+                container.innerHTML += `
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 flex justify-between items-start space-x-2 text-xs shadow-sm hover:border-gray-300 transition">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-1 mb-1">
+                                <span class="font-bold text-gray-800 font-mono">${soal.id}</span>
+                                <span class="px-1.5 py-0.5 rounded text-[9px] font-bold ${tipeBadg}">${soal.tipe}</span>
+                            </div>
+                            <p class="text-gray-600 truncate font-medium">${soal.pertanyaan}</p>
+                            ${soal.kunci ? `<p class="text-[10px] text-green-600 mt-1">Kunci: <span class="font-bold">${soal.kunci}</span></p>` : ''}
+                        </div>
+                        <button onclick="hapusSoalGuru(${index})" class="text-red-500 hover:text-red-700 p-1.5 hover:bg-red-50 rounded transition shrink-0 cursor-pointer">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function hapusSoalGuru(index) {
+            tunjukkanPesanKustom("Hapus Soal?", "Apakah Anda yakin ingin menghapus soal ini dari paket ujian?", "konfirmasi", function() {
+                databaseSoal.splice(index, 1);
+                
+                if (indexSoalAktif >= databaseSoal.length && indexSoalAktif > 0) {
+                    indexSoalAktif = databaseSoal.length - 1;
+                }
+                
+                delete jawabanSiswa[index];
+                
+                renderSoal();
+                renderDaftarBankSoalGuru();
+                tunjukkanPesanKustom("Terhapus", "Soal telah dihapus.", "info");
+            });
+        }
+
+        function buatSoalDefault(jenis) {
+            if (jenis === 'TKJ') {
+                databaseSoal = JSON.parse(JSON.stringify(paketTKJ));
+                document.getElementById('txt-info-mapel').innerText = "Mata Pelajaran: Kompetensi Keahlian TKJ";
+                document.getElementById('inp-mapel').value = "Kompetensi Keahlian TKJ";
+            } else {
+                databaseSoal = JSON.parse(JSON.stringify(paketRPL));
+                document.getElementById('txt-info-mapel').innerText = "Mata Pelajaran: Kompetensi Keahlian RPL";
+                document.getElementById('inp-mapel').value = "Kompetensi Keahlian RPL";
+            }
+            
+            indexSoalAktif = 0;
+            jawabanSiswa = {};
+            document.getElementById('inp-kode').value = "LOHIA-SOAL-" + (databaseSoal.length + 1);
+            
+            renderSoal();
+            renderDaftarBankSoalGuru();
+        }
+
+        function resetSemuaSoal() {
+            tunjukkanPesanKustom("Kosongkan Soal?", "Apakah Anda yakin ingin mengosongkan seluruh bank soal dan jawaban siswa saat ini?", "konfirmasi", function() {
+                databaseSoal = [];
+                jawabanSiswa = {};
+                indexSoalAktif = 0;
+                document.getElementById('txt-info-mapel').innerText = "Mata Pelajaran: Belum Ditentukan";
+                
+                renderSoal();
+                renderDaftarBankSoalGuru();
+            });
+        }
+
+        function gunakanGambarDemo() {
+            document.getElementById('inp-gambar').value = "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&auto=format&fit=crop&q=60";
+        }
+
+
+        // ==============================================
+        // UTILITY UI HANDLER
+        // ==============================================
+        function pindahTabGuru() {
+            document.getElementById('modal-guru').classList.remove('hidden');
+        }
+
+        // Pastikan Tab Guru ditutup dengan benar
+        function tutupTabGuru() {
+            document.getElementById('modal-guru').classList.add('hidden');
+        }
+
+        function ubahUkuranTeks(ukuran) {
+            ukuranTeks = ukuran;
+            renderSoal();
+        }
+
+        // Tampilkan Modal Panduan
+        function bukaModalPanduan() {
+            document.getElementById('modal-panduan').classList.remove('hidden');
+        }
+
+        function tutupModalPanduan() {
+            document.getElementById('modal-panduan').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
