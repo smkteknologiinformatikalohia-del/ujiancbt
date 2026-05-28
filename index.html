@@ -182,10 +182,14 @@
                     <!-- Grid Data Diri Komprehensif -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm bg-gray-50 p-5 rounded-xl border border-gray-100">
                         <div class="space-y-1">
+                            <span class="text-xs text-gray-400 font-semibold block">Username Sesi</span>
+                            <span id="bio-username" class="font-mono font-bold text-gray-800">-</span>
+                        </div>
+                        <div class="space-y-1">
                             <span class="text-xs text-gray-400 font-semibold block">Nama Lengkap Peserta</span>
                             <span id="bio-nama" class="font-bold text-gray-800 text-base">-</span>
                         </div>
-                        <div class="space-y-1">
+                        <div class="space-y-1 border-t pt-2 md:border-t-0 md:pt-0">
                             <span class="text-xs text-gray-400 font-semibold block">NISN</span>
                             <span id="bio-nisn" class="font-mono font-bold text-gray-800 text-base">-</span>
                         </div>
@@ -193,7 +197,7 @@
                             <span class="text-xs text-gray-400 font-semibold block">Kelas / Rombel</span>
                             <span id="bio-kelas" class="font-bold text-gray-800">-</span>
                         </div>
-                        <div class="space-y-1 border-t pt-2 md:border-t-0 md:pt-0">
+                        <div class="space-y-1 border-t pt-2">
                             <span class="text-xs text-gray-400 font-semibold block">Kompetensi Keahlian / Jurusan</span>
                             <span id="bio-jurusan" class="font-bold text-gray-800">-</span>
                         </div>
@@ -201,7 +205,7 @@
                             <span class="text-xs text-gray-400 font-semibold block">Sesi Pelaksanaan Ujian</span>
                             <span id="bio-sesi" class="font-bold text-amber-600 font-poppins text-xs px-2.5 py-0.5 bg-amber-50 rounded border border-amber-200 inline-block mt-0.5">-</span>
                         </div>
-                        <div class="space-y-1 border-t pt-2">
+                        <div class="space-y-1 border-t pt-2 md:col-span-2">
                             <span class="text-xs text-gray-400 font-semibold block">Mata Pelajaran Ujian</span>
                             <span id="bio-mapel" class="font-bold text-blue-700">-</span>
                         </div>
@@ -214,14 +218,14 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs text-gray-500 mb-1">Pilih Jenis Kelamin:</label>
-                                <select id="bio-jk" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-blue-500">
+                                <select id="bio-jk" onchange="sinkronisasiBiodataSiswa()" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-blue-500">
                                     <option value="L">Laki-laki</option>
                                     <option value="P">Perempuan</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs text-gray-500 mb-1">Tanggal Lahir (Konfirmasi):</label>
-                                <input type="date" id="bio-tgl-lahir" value="2008-01-01" class="w-full p-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500">
+                                <input type="date" id="bio-tgl-lahir" value="2008-01-01" onchange="sinkronisasiBiodataSiswa()" class="w-full p-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>
                     </div>
@@ -284,7 +288,7 @@
 
                     <div class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg">
                         <p class="text-[11px] text-amber-800 leading-relaxed">
-                            * Tombol <strong>"MULAI UJIAN"</strong> akan mengaktifkan penghitung mundur waktu ujian. Pastikan Anda telah siap fisik dan mental sebelum mengkliknya.
+                            * Tombol <strong>"MULAI UJIAN"</strong> akan mengaktifkan penghitung mundur waktu ujian. Pastikan Anda telah siap fisik and mental sebelum mengkliknya.
                         </p>
                     </div>
 
@@ -548,9 +552,15 @@
                         <p class="text-xs text-gray-400">SMK Swasta Teknologi Informatika Lohia (NPSN: 6996050)</p>
                     </div>
                 </div>
-                <button onclick="tutupTabGuru()" class="text-gray-400 hover:text-white text-xl p-1.5 hover:bg-gray-800 rounded-lg transition">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="flex items-center space-x-3">
+                    <button onclick="keluarSesiAdmin()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-3.5 py-2 rounded-lg transition flex items-center space-x-1.5 cursor-pointer">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout Admin</span>
+                    </button>
+                    <button onclick="tutupTabGuru()" class="text-gray-400 hover:text-white text-xl p-1.5 hover:bg-gray-800 rounded-lg transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- TAB NAVIGASI PANEL GURU -->
@@ -773,7 +783,7 @@
                                         <tr class="bg-gray-100 border-b border-gray-200 text-gray-600 font-semibold">
                                             <th class="p-3">Nama Siswa / NISN</th>
                                             <th class="p-3">Kelas / Jurusan</th>
-                                            <th class="p-3">Sesi</th>
+                                            <th class="p-3">Sesi / Status Bio</th>
                                             <th class="p-3 font-mono">Username</th>
                                             <th class="p-3 font-mono">Password</th>
                                             <th class="p-3 text-center">Aksi</th>
@@ -881,7 +891,7 @@
             <!-- Footer Modal -->
             <div class="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-between items-center shrink-0">
                 <span class="text-xs text-gray-500 font-mono">SMK Swasta TI Lohia • NPSN 6996050</span>
-                <button onclick="tutupTabGuru()" class="bg-gray-800 hover:bg-gray-700 text-white font-bold text-sm px-6 py-2 rounded-lg transition shadow cursor-pointer">
+                <button onclick="tutupTabGuru()" class="bg-gray-800 hover:bg-gray-700 text-white font-bold text-sm px-6 py-2 rounded-lg transition shadow cursor-pointer font-poppins">
                     Selesai & Terapkan &rarr;
                 </button>
             </div>
@@ -929,7 +939,7 @@
             <!-- Footer Dialog -->
             <div class="bg-gray-50 px-6 py-3.5 flex justify-end gap-2.5">
                 <button id="dialog-btn-batal" onclick="batalDialogKustom()" class="hidden px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs rounded-lg transition cursor-pointer">Batal</button>
-                <button id="dialog-btn-setuju" onclick="setujuDialogKustom()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition shadow cursor-pointer">Ya, Setuju</button>
+                <button id="dialog-btn-setuju" onclick="setujuDialogKustom()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition shadow cursor-pointer font-poppins">Ya, Setuju</button>
             </div>
         </div>
     </div>
@@ -1045,7 +1055,7 @@
         // State Management Global
         let databaseSoal = [];
         let indexSoalAktif = 0;
-        let jawabanSiswa = {}; // Format key: indexSoal => { value: 'A'/'B'/text, ragu: true/false }
+        let jawabanSiswa = {}; // Format key: indexSoal => { value: 'A'/'B'/text, ragu: true/false, progressCount: 0 }
         let ukuranTeks = 'sedang'; 
         let dialogConfirmCallback = null;
         let intervalTimer = null; // Menyimpan objek interval timer pengerjaan soal
@@ -1066,7 +1076,10 @@
                 jurusan: "Teknik Komputer & Jaringan (TKJ)", 
                 sesi: "Sesi 1 (Pagi)", 
                 username: "loh01", 
-                sandi: "pass01" 
+                sandi: "pass01",
+                jk: "L",
+                tglLahir: "2008-01-01",
+                sudahKonfirmasi: false
             },
             { 
                 nama: "Siti Rahma", 
@@ -1075,7 +1088,10 @@
                 jurusan: "Rekayasa Perangkat Lunak (RPL)", 
                 sesi: "Sesi 1 (Pagi)", 
                 username: "loh02", 
-                sandi: "pass02" 
+                sandi: "pass02",
+                jk: "P",
+                tglLahir: "2008-05-12",
+                sudahKonfirmasi: false
             },
             { 
                 nama: "Fajar Ramadan", 
@@ -1084,7 +1100,10 @@
                 jurusan: "Rekayasa Perangkat Lunak (RPL)", 
                 sesi: "Sesi 2 (Siang)", 
                 username: "loh03", 
-                sandi: "pass03" 
+                sandi: "pass03",
+                jk: "L",
+                tglLahir: "2008-09-20",
+                sudahKonfirmasi: false
             }
         ];
         let siswaSedangLogin = null;
@@ -1168,18 +1187,15 @@
             } else if (statusTahapUjian === 'biodata') {
                 tampilkanBiodataSiswa();
             } else if (statusTahapUjian === 'token') {
-                // Tampilkan container token langsung
                 document.getElementById('token-container').classList.remove('hidden');
                 document.getElementById('token-container').classList.add('flex');
             } else if (statusTahapUjian === 'ujian') {
-                // Langsung masuk ke pengerjaan soal ujian utama
                 document.getElementById('app-container').classList.remove('hidden');
                 document.getElementById('app-container').classList.add('flex');
 
                 document.getElementById('txt-nama-siswa').innerText = siswaSedangLogin.nama.toUpperCase();
                 document.getElementById('lbl-info-siswa-detil').innerText = siswaSedangLogin.username === 'admin' ? "Akses Penuh Guru / Admin" : `${siswaSedangLogin.nama} (${siswaSedangLogin.kelas})`;
 
-                // Lanjutkan sisa waktu ujian pengerjaan
                 let sisaUjian = sessionStorage.getItem('sisaWaktuUjian') ? parseInt(sessionStorage.getItem('sisaWaktuUjian'), 10) : 7200;
                 jalankanTimerUjian(sisaUjian);
                 renderSoal();
@@ -1191,7 +1207,6 @@
         // SINKRONISASI TOKEN SESI
         // ==============================================
         function sinkronisasikanTokenLayar() {
-            // Tampilkan token di form pengawas ruang
             const inputCustomToken = document.getElementById('inp-custom-token');
             if (inputCustomToken) {
                 inputCustomToken.value = tokenUjianAktif;
@@ -1215,7 +1230,6 @@
             dPesan.innerText = pesan;
             dialogConfirmCallback = cbSetuju;
 
-            // Sesuaikan warna tema berdasarkan tipe notifikasi
             if (jenis === 'sukses') {
                 dHeaderBg.className = "bg-green-600 px-6 py-4 text-white flex items-center space-x-2";
                 dIcon.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
@@ -1230,7 +1244,6 @@
                 dIcon.innerHTML = `<i class="fa-solid fa-bell"></i>`;
             }
 
-            // Tampilkan tombol batal jika bertipe konfirmasi
             if (jenis === 'konfirmasi') {
                 dBtnBatal.classList.remove('hidden');
             } else {
@@ -1269,23 +1282,19 @@
                 document.getElementById('txt-nama-siswa').innerText = "ADMINISTRATOR (GURU)";
                 document.getElementById('lbl-info-siswa-detil').innerText = "Akses Penuh Guru / Admin";
 
-                // Sembunyikan login & buka halaman ujian utama langsung untuk kelola
                 document.getElementById('login-container').classList.add('hidden');
                 document.getElementById('app-container').classList.remove('hidden');
                 document.getElementById('app-container').classList.add('flex');
 
-                // Reset field login
                 document.getElementById('login-username').value = "";
                 document.getElementById('login-password').value = "";
 
-                // Simpan state
                 simpanStateSesi();
 
                 tunjukkanPesanKustom("Login Admin Berhasil", "Selamat datang Bapak/Ibu Guru. Anda masuk sebagai Administrator Sesi. Panel Kelola CBT akan langsung dibuka.", "sukses", function() {
                     pindahTabGuru();
                 });
                 
-                // Mulai timer default untuk admin (tetapi tidak wajib diselesaikan)
                 jalankanTimerUjian(7200);
                 renderSoal();
                 return;
@@ -1298,17 +1307,14 @@
                 siswaSedangLogin = siswaDitemukan;
                 statusTahapUjian = 'biodata';
                 
-                // Simpan state
                 simpanStateSesi();
-
-                // Menuju ke Tahap 2: Tampilkan Biodata untuk dikonfirmasi
                 tampilkanBiodataSiswa();
             } else {
                 tunjukkanPesanKustom("Gagal Masuk", "Username atau Password yang Anda masukkan salah. Silakan periksa kembali atau hubungi pengawas ujian.", "error");
             }
         }
 
-        // Tampilkan halaman biodata komprehensif
+        // Tampilkan halaman biodata komprehensif dengan pilihan JK dan Tgl Lahir tersinkron
         function tampilkanBiodataSiswa() {
             document.getElementById('login-container').classList.add('hidden');
             document.getElementById('biodata-container').classList.remove('hidden');
@@ -1322,9 +1328,35 @@
             document.getElementById('bio-jurusan').innerText = siswaSedangLogin.jurusan || "Teknik Komputer & Jaringan (TKJ)";
             document.getElementById('bio-sesi').innerText = siswaSedangLogin.sesi || "Sesi 1 (Pagi)";
 
-            // Ambil nama mapel aktif saat ini
+            // Sinkronkan isian JK & Tanggal lahir dari database internal jika ada
+            if (siswaSedangLogin.jk) {
+                document.getElementById('bio-jk').value = siswaSedangLogin.jk;
+            }
+            if (siswaSedangLogin.tglLahir) {
+                document.getElementById('bio-tgl-lahir').value = siswaSedangLogin.tglLahir;
+            }
+
             const mapelAktif = document.getElementById('inp-mapel').value;
             document.getElementById('bio-mapel').innerText = mapelAktif;
+        }
+
+        // Menyimpan data jenis kelamin dan tanggal lahir siswa secara langsung ke database siswa (Dua Arah)
+        function sinkronisasiBiodataSiswa() {
+            if (!siswaSedangLogin) return;
+            const jkInp = document.getElementById('bio-jk').value;
+            const tglInp = document.getElementById('bio-tgl-lahir').value;
+
+            // Cari indeks siswa di daftarSiswa global untuk diupdate
+            const indexSiswa = daftarSiswa.findIndex(s => s.username === siswaSedangLogin.username);
+            if (indexSiswa !== -1) {
+                daftarSiswa[indexSiswa].jk = jkInp;
+                daftarSiswa[indexSiswa].tglLahir = tglInp;
+                siswaSedangLogin.jk = jkInp;
+                siswaSedangLogin.tglLahir = tglInp;
+                simpanStateSesi();
+                renderTabelSiswaGuru(); // Update visual tabel admin real-time
+                renderKartuUjianAdmin(); // Update visual kartu cetak real-time
+            }
         }
 
         // Batal di halaman biodata
@@ -1340,17 +1372,24 @@
 
         // Lanjut dari biodata ke Token
         function lanjutKeTokenSesi() {
+            // Tandai siswa sudah mengonfirmasi data biodatanya
+            const indexSiswa = daftarSiswa.findIndex(s => s.username === siswaSedangLogin.username);
+            if (indexSiswa !== -1) {
+                daftarSiswa[indexSiswa].sudahKonfirmasi = true;
+                siswaSedangLogin.sudahKonfirmasi = true;
+            }
+
             document.getElementById('biodata-container').classList.remove('flex');
             document.getElementById('biodata-container').classList.add('hidden');
             
             statusTahapUjian = 'token';
             simpanStateSesi();
+            renderTabelSiswaGuru(); // Refresh indikator status di tabel admin
 
             // Tampilkan halaman token
             document.getElementById('token-container').classList.remove('hidden');
             document.getElementById('token-container').classList.add('flex');
             
-            // Bersihkan field input token lama
             document.getElementById('inp-token-akses').value = "";
         }
 
@@ -1362,7 +1401,6 @@
             statusTahapUjian = 'biodata';
             simpanStateSesi();
 
-            // Tampilkan kembali biodata
             tampilkanBiodataSiswa();
         }
 
@@ -1371,29 +1409,29 @@
             event.preventDefault();
             const tokenInp = document.getElementById('inp-token-akses').value.trim();
 
-            // Memeriksa token masukan siswa dengan token aktif di sistem pengawas (hanya angka)
             if (tokenInp === tokenUjianAktif) {
-                // Token Benar! Sembunyikan halaman token & buka ujian utama
                 document.getElementById('token-container').classList.remove('flex');
                 document.getElementById('token-container').classList.add('hidden');
                 
                 document.getElementById('app-container').classList.remove('hidden');
                 document.getElementById('app-container').classList.add('flex');
 
-                // Set data nama ke header pengerjaan soal
                 document.getElementById('txt-nama-siswa').innerText = siswaSedangLogin.nama.toUpperCase();
                 document.getElementById('lbl-info-siswa-detil').innerText = `${siswaSedangLogin.nama} (${siswaSedangLogin.kelas})`;
 
-                // Bersihkan isian form login
-                document.getElementById('login-username').value = "";
-                document.getElementById('login-password').value = "";
-
                 statusTahapUjian = 'ujian';
+                
+                // Set default progres jawab di database siswa jika baru mulai
+                const indexSiswa = daftarSiswa.findIndex(s => s.username === siswaSedangLogin.username);
+                if (indexSiswa !== -1) {
+                    daftarSiswa[indexSiswa].aktifPengerjaan = true;
+                }
+                
                 simpanStateSesi();
+                renderTabelSiswaGuru();
 
                 tunjukkanPesanKustom("Token Terverifikasi!", "Selamat! Token valid. Lembar kerja Anda telah dibuka. Selamat mengerjakan ujian, semoga sukses!", "sukses");
                 
-                // Mulai hitung mundur waktu ujian (2 jam = 7200 detik)
                 jalankanTimerUjian(7200);
                 renderSoal();
             } else {
@@ -1402,25 +1440,48 @@
         }
 
         function keluarSesiSiswa() {
+            if (siswaSedangLogin && siswaSedangLogin.username === 'admin') {
+                keluarSesiAdmin();
+                return;
+            }
+            
             tunjukkanPesanKustom("Konfirmasi Keluar", "Apakah Anda ingin keluar dari sesi ujian saat ini? Jawaban Anda yang sudah terisi akan tetap tersimpan.", "konfirmasi", function() {
-                // Hentikan interval timer jika berjalan
                 if (intervalTimer) {
                     clearInterval(intervalTimer);
                 }
 
                 siswaSedangLogin = null;
-                jawabanSiswa = {};
-                indexSoalAktif = 0;
                 statusTahapUjian = 'login';
                 
-                // Clear session storage untuk menghapus data sesi login saat ini
                 sessionStorage.removeItem('siswaSedangLogin');
                 sessionStorage.removeItem('statusTahapUjian');
-                sessionStorage.removeItem('jawabanSiswa');
                 sessionStorage.removeItem('sisaWaktuUjian');
                 simpanStateSesi();
+                renderTabelSiswaGuru();
                 
-                // Ganti layar ke login
+                document.getElementById('app-container').classList.remove('flex');
+                document.getElementById('app-container').classList.add('hidden');
+                document.getElementById('login-container').classList.remove('hidden');
+            });
+        }
+
+        // Fungsi khusus Logout untuk Admin
+        function keluarSesiAdmin() {
+            tunjukkanPesanKustom("Konfirmasi Logout Admin", "Apakah Anda yakin ingin keluar dari Sesi Administrator?", "konfirmasi", function() {
+                if (intervalTimer) {
+                    clearInterval(intervalTimer);
+                }
+
+                siswaSedangLogin = null;
+                statusTahapUjian = 'login';
+                
+                sessionStorage.removeItem('siswaSedangLogin');
+                sessionStorage.removeItem('statusTahapUjian');
+                simpanStateSesi();
+                
+                // Sembunyikan panel guru jika terbuka
+                tutupTabGuru();
+
                 document.getElementById('app-container').classList.remove('flex');
                 document.getElementById('app-container').classList.add('hidden');
                 document.getElementById('login-container').classList.remove('hidden');
@@ -1454,7 +1515,6 @@
             const tabKontenCards = document.getElementById('tab-konten-cards');
             const tabKontenToken = document.getElementById('tab-konten-token');
 
-            // Reset seluruh tombol & konten ke state default
             tabBtnSoal.className = "px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap";
             tabBtnSiswa.className = "px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap";
             tabBtnCards.className = "px-4 py-2 text-gray-600 hover:text-gray-800 rounded-t-lg whitespace-nowrap";
@@ -1471,10 +1531,11 @@
             } else if (tabName === 'siswa') {
                 tabBtnSiswa.className = "px-4 py-2 bg-white text-indigo-700 rounded-t-lg font-bold shadow-sm border-t-2 border-indigo-600 whitespace-nowrap";
                 tabKontenSiswa.classList.remove('hidden');
+                renderTabelSiswaGuru();
             } else if (tabName === 'cards') {
                 tabBtnCards.className = "px-4 py-2 bg-white text-green-700 rounded-t-lg font-bold shadow-sm border-t-2 border-green-600 whitespace-nowrap";
                 tabKontenCards.classList.remove('hidden');
-                renderKartuUjianAdmin(); // Pastikan kartu ujian up-to-date saat dibuka
+                renderKartuUjianAdmin(); 
             } else if (tabName === 'token') {
                 tabBtnToken.className = "px-4 py-2 bg-white text-amber-700 rounded-t-lg font-bold shadow-sm border-t-2 border-amber-600 whitespace-nowrap";
                 tabKontenToken.classList.remove('hidden');
@@ -1511,7 +1572,10 @@
                 sesi: sesi, 
                 jurusan: jurusan, 
                 username: user, 
-                sandi: pass 
+                sandi: pass,
+                jk: "L",
+                tglLahir: "2008-01-01",
+                sudahKonfirmasi: false
             });
             
             // Reset fields form pendaftaran siswa
@@ -1522,9 +1586,8 @@
             document.getElementById('inp-siswa-pass').value = "";
 
             renderTabelSiswaGuru();
-            renderKartuUjianAdmin(); // Sinkronkan juga area kartu ujian
+            renderKartuUjianAdmin(); 
             
-            // Simpan State Sesi
             simpanStateSesi();
 
             tunjukkanPesanKustom("Siswa Ditambahkan", `Akun untuk siswa ${nama} berhasil didaftarkan dalam database ${sesi}!`, "sukses");
@@ -1535,16 +1598,15 @@
                 const namaDihapus = daftarSiswa[idx].nama;
                 daftarSiswa.splice(idx, 1);
                 renderTabelSiswaGuru();
-                renderKartuUjianAdmin(); // Update area kartu ujian
+                renderKartuUjianAdmin(); 
                 
-                // Simpan State Sesi
                 simpanStateSesi();
 
                 tunjukkanPesanKustom("Akun Dihapus", `Izin akses login untuk ${namaDihapus} telah dinonaktifkan.`, "info");
             });
         }
 
-        // Render data siswa dalam format tabel baru yang komprehensif
+        // Render data siswa dalam format tabel baru yang komprehensif dilengkapi info status bio & integrasi progress (Dua Arah)
         function renderTabelSiswaGuru() {
             const tBody = document.getElementById('tbl-body-siswa');
             const totalBadg = document.getElementById('txt-total-akun-siswa');
@@ -1558,20 +1620,42 @@
 
             tBody.innerHTML = "";
             daftarSiswa.forEach((siswa, index) => {
+                // Kalkulasi progress pengerjaan siswa secara dinamis untuk dilaporkan ke admin
+                let progresBadge = '<span class="bg-gray-100 text-gray-600 text-[9px] px-1.5 py-0.5 rounded border">Belum Mulai</span>';
+                if (siswa.username === (siswaSedangLogin ? siswaSedangLogin.username : "")) {
+                    // Hitung jumlah jawaban saat ini
+                    let dijawab = 0;
+                    for (let k in jawabanSiswa) {
+                        if (jawabanSiswa[k] && jawabanSiswa[k].value && jawabanSiswa[k].value.trim() !== "") {
+                            dijawab++;
+                        }
+                    }
+                    progresBadge = `<span class="bg-blue-600 text-white text-[9px] px-1.5 py-0.5 rounded border animate-pulse">Sedang Ujian (${dijawab} Jawab)</span>`;
+                } else if (siswa.sudahKonfirmasi) {
+                    progresBadge = '<span class="bg-green-100 text-green-700 text-[9px] px-1.5 py-0.5 rounded border font-semibold">Menunggu Token / Selesai</span>';
+                }
+
+                // Status jenis kelamin & tgl lahir terintegrasi
+                const jkLabel = siswa.jk === "L" ? "Laki-laki" : "Perempuan";
+                const tglLabel = siswa.tglLahir || "-";
+
                 tBody.innerHTML += `
                     <tr class="hover:bg-gray-50 transition border-b border-gray-100">
                         <td class="p-3">
                             <div class="font-semibold text-gray-800">${siswa.nama}</div>
-                            <div class="text-[10px] text-gray-400 font-mono">NISN: ${siswa.nisn || "-"}</div>
+                            <div class="text-[10px] text-gray-400 font-mono">NISN: ${siswa.nisn || "-"} (${jkLabel})</div>
                         </td>
                         <td class="p-3">
                             <div class="text-gray-700">${siswa.kelas}</div>
                             <div class="text-[10px] text-indigo-600 font-medium">${siswa.jurusan || "-"}</div>
                         </td>
                         <td class="p-3">
-                            <span class="bg-amber-50 text-amber-800 text-[10px] px-2 py-0.5 rounded-full border border-amber-200 font-medium font-poppins">
-                                ${siswa.sesi || "Sesi 1"}
-                            </span>
+                            <div class="mb-1">
+                                <span class="bg-amber-50 text-amber-800 text-[10px] px-2 py-0.5 rounded-full border border-amber-200 font-medium font-poppins">
+                                    ${siswa.sesi || "Sesi 1"}
+                                </span>
+                            </div>
+                            <div>${progresBadge}</div>
                         </td>
                         <td class="p-3 font-mono text-blue-700 font-bold">${siswa.username}</td>
                         <td class="p-3 font-mono text-gray-600">${siswa.sandi}</td>
@@ -1590,8 +1674,9 @@
         // LOGIKA PENYUSUNAN & CETAK KARTU SISWA
         // ==============================================
         
-        // Membantu merakit template kartu HTML cetak standard proktor
+        // Membantu merakit template kartu HTML cetak standard proktor dengan JK dan Tgl Lahir terintegrasi otomatis
         function buatTemplateKartuHtml(siswa) {
+            const labelJK = siswa.jk === "L" ? "Laki-laki" : "Perempuan";
             return `
                 <div class="bg-white border-2 border-blue-800 rounded-xl p-4 shadow-md max-w-lg mx-auto mb-6 text-xs text-gray-800 relative overflow-hidden break-inside-avoid">
                     <!-- Garis batas hiasan ANBK -->
@@ -1628,12 +1713,17 @@
                                 <tr class="align-top">
                                     <td class="font-semibold text-gray-500 w-24">Nama Lengkap</td>
                                     <td class="px-1 text-gray-400">:</td>
-                                    <td class="font-bold text-gray-900 uppercase">${siswa.nama}</td>
+                                    <td class="font-bold text-gray-900 uppercase">${siswa.nama} (${labelJK})</td>
                                 </tr>
                                 <tr class="align-top">
                                     <td class="font-semibold text-gray-500">NISN</td>
                                     <td class="px-1 text-gray-400">:</td>
                                     <td class="font-mono text-gray-800 font-semibold">${siswa.nisn || "-"}</td>
+                                </tr>
+                                <tr class="align-top">
+                                    <td class="font-semibold text-gray-500">Tgl Lahir</td>
+                                    <td class="px-1 text-gray-400">:</td>
+                                    <td class="text-gray-800 font-semibold font-mono">${siswa.tglLahir || "2008-01-01"}</td>
                                 </tr>
                                 <tr class="align-top">
                                     <td class="font-semibold text-gray-500">Kelas / Rombel</td>
@@ -1646,7 +1736,7 @@
                                     <td class="text-gray-800 font-medium">${siswa.jurusan || "-"}</td>
                                 </tr>
                                 <tr class="align-top">
-                                    <td class="font-semibold text-gray-500">Sesi Sesi</td>
+                                    <td class="font-semibold text-gray-500">Sesi Ujian</td>
                                     <td class="px-1 text-gray-400">:</td>
                                     <td class="font-bold text-amber-700">${siswa.sesi || "Sesi 1"}</td>
                                 </tr>
@@ -1674,8 +1764,8 @@
                             * Simpan kartu ini baik-baik.<br>Dilarang membawa catatan ke komputer.
                         </div>
                         <div class="text-right text-[8px] leading-tight shrink-0 mr-2">
-                            <p class="text-gray-500">Kendari, Mei 2026</p>
-                            <p class="font-bold text-gray-800 mt-0.5">Kepala Proktor CBT</p>
+                            <p class="text-gray-500 font-poppins">Kendari, Mei 2026</p>
+                            <p class="font-bold text-gray-800 mt-0.5 font-poppins">Kepala Proktor CBT</p>
                             <div class="h-6 w-16 mx-auto my-0.5 bg-contain bg-no-repeat opacity-45" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/f/f8/Signature_of_Robert_Adler.svg');"></div>
                             <p class="font-semibold text-gray-700 border-t border-gray-400 pt-0.5">Panitia Pelaksana</p>
                         </div>
@@ -2010,6 +2100,7 @@
             jawabanSiswa[indexSoalAktif] = { value: pilihan, ragu: raguStatus };
             simpanStateSesi();
             renderSoal();
+            renderTabelSiswaGuru(); 
         }
 
         // Penanganan isian singkat
@@ -2018,6 +2109,7 @@
             jawabanSiswa[indexSoalAktif] = { value: teks, ragu: raguStatus };
             simpanStateSesi();
             perbaruiDaftarNavigasi();
+            renderTabelSiswaGuru(); 
         }
 
         // Status ragu-ragu
@@ -2091,7 +2183,6 @@
         }
 
         function kirimJawabanFinal() {
-            // Hentikan interval timer jika berjalan
             if (intervalTimer) {
                 clearInterval(intervalTimer);
             }
@@ -2113,6 +2204,13 @@
             const nilaiAkhir = Math.round((benar / databaseSoal.length) * 100);
             const namaSiswaInfo = siswaSedangLogin ? siswaSedangLogin.nama : "GUEST";
             
+            // Set status pengerjaan selesai di data siswa
+            const indexSiswa = daftarSiswa.find(s => s.username === (siswaSedangLogin ? siswaSedangLogin.username : ""));
+            if (indexSiswa) {
+                indexSiswa.sudahSelesaiUjian = true;
+                indexSiswa.nilaiUjian = nilaiAkhir;
+            }
+
             tunjukkanPesanKustom(
                 "Ujian Selesai!",
                 `Selamat, lembar jawaban Anda berhasil dikirim ke server SMK S TI Lohia.\n\nSiswa: ${namaSiswaInfo}\nSkor Benar: ${benar}\nSalah/Kosong: ${salah}\nNilai Hasil Ujian: ${nilaiAkhir}`,
@@ -2203,6 +2301,7 @@
             }
         }
 
+        // Menyimpan Soal Baru
         function simpanSoalBaru(event) {
             event.preventDefault();
             
@@ -2341,6 +2440,7 @@
             simpanStateSesi();
         }
 
+        // Reset semua soal
         function resetSemuaSoal() {
             tunjukkanPesanKustom("Kosongkan Soal?", "Apakah Anda yakin ingin mengosongkan seluruh bank soal dan jawaban siswa saat ini?", "konfirmasi", function() {
                 databaseSoal = [];
