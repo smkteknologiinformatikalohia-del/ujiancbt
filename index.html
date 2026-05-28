@@ -40,7 +40,7 @@ import {
 } from 'lucide-react';
 
 // ==========================================
-// DATA SEEDER AWAL (JIKA LOCALSTORAGE KOSONG)
+// DATA SEEDER AWAL (SINKRONISASI DATABASE PERMANEN)
 // ==========================================
 
 const DEFAULT_STUDENTS = [
@@ -184,7 +184,7 @@ export default function App() {
   });
 
   // --- STATE TAMPILAN (TAB) ---
-  const [currentUser, setCurrentUser] = useState(null); // Sesi user login aktif
+  const [currentUser, setCurrentUser] = useState(null); 
   const [currentTab, setCurrentTab] = useState('login'); 
 
   // --- LOGIN STATES ---
@@ -362,7 +362,7 @@ export default function App() {
       return;
     }
 
-    // Cek Siswa (Mendeteksi perubahan permanen dari data siswa yang diinput admin)
+    // Cek Siswa (Mendeteksi perubahan dari data siswa yang diinput admin)
     const student = students.find(
       s => s.username.toLowerCase() === usernameInput.toLowerCase() && s.password === passwordInput
     );
@@ -410,7 +410,7 @@ export default function App() {
       return;
     }
 
-    // Validasi Tanggal Lahir (Kecocokan dengan database yang disimpan)
+    // Validasi Tanggal Lahir
     if (birthDateInput !== currentUser.data.tanggalLahir) {
       setConfirmationError('Tanggal Lahir yang Anda masukkan tidak sesuai dengan database!');
       return;
@@ -428,7 +428,7 @@ export default function App() {
   const startTest = () => {
     setAnswers({});
     setFlaggedQuestions({});
-    setTimeLeft(examDuration * 60); // Waktu diatur dinamis sesuai input admin
+    setTimeLeft(examDuration * 60); 
     setActiveQuestionIndex(0);
     setTestStarted(true);
     setCurrentTab('test_screen');
@@ -670,7 +670,6 @@ export default function App() {
     }
   };
 
-  // INPUT SISWA BARU (LANGSUNG TERSIMPAN PERMANEN)
   const handleAddStudent = (e) => {
     e.preventDefault();
     if (!newStudName || !newStudUsername || !newStudPassword) {
@@ -713,7 +712,6 @@ export default function App() {
     }
   };
 
-  // Tambah Mata Ujian Dinamis di Pengaturan
   const handleAddSubject = (e) => {
     e.preventDefault();
     if (!newSubjName.trim() || !newSubjCode.trim()) {
@@ -744,7 +742,6 @@ export default function App() {
     }
   };
 
-  // Mutasi Sesi Dinamis di Pengaturan
   const handleUpdateSessionTime = (key, field, value) => {
     const updated = {
       ...sessionSettings,
@@ -756,7 +753,6 @@ export default function App() {
     setSessionSettings(updated);
   };
 
-  // INPUT NILAI ESSAY MANUAL OLEH ADMIN
   const handleSaveEssayScore = (e) => {
     e.preventDefault();
     const parsedScore = parseInt(tempEssayScoreInput);
@@ -765,7 +761,6 @@ export default function App() {
       return;
     }
 
-    // Hitung ulang skor gabungan akhir (Bobot: 80% Skor Otomatis + 20% Skor Essay)
     const finalCalculated = Math.round((selectedResultDetail.autoScore * 0.8) + (parsedScore * 0.2));
 
     const updatedResults = examResults.map(res => {
@@ -792,13 +787,11 @@ export default function App() {
     }
   };
 
-  // Ambil kode soal dinamis untuk mata ujian yang dipilih
   const getSelectedSubjectCode = () => {
     const found = subjects.find(s => s.name === subjectInput);
     return found ? found.code : "CBT-ANBK-GEN-99";
   };
 
-  // Filter Hasil Nilai Ujian Siswa
   const getFilteredResults = () => {
     return examResults.filter(res => {
       const matchesSearch = res.studentName.toLowerCase().includes(resultSearchQuery.toLowerCase()) || 
@@ -808,7 +801,6 @@ export default function App() {
     });
   };
 
-  // Trigger window.print untuk cetak kartu ujian
   const triggerPrint = (isBulk = false, studentData = null) => {
     if (isBulk) {
       setIsBulkPrinting(true);
@@ -821,6 +813,24 @@ export default function App() {
     setTimeout(() => {
       window.print();
     }, 400);
+  };
+
+  const getQuestionStatus = (qId, type) => {
+    const ans = answers[qId];
+    const isFlagged = flaggedQuestions[qId];
+
+    let hasAnswer = false;
+    if (type === 'menjodohkan') {
+      hasAnswer = ans && Object.keys(ans).length > 0;
+    } else if (type === 'pgk') {
+      hasAnswer = ans && ans.length > 0;
+    } else {
+      hasAnswer = ans !== undefined && ans !== "";
+    }
+
+    if (isFlagged) return "ragu";
+    if (hasAnswer) return "sudah";
+    return "belum";
   };
 
   return (
@@ -928,7 +938,7 @@ export default function App() {
         {/* ==================== 1. TAB LOGIN ==================== */}
         {currentTab === 'login' && (
           <div className="relative min-h-screen flex flex-col justify-between">
-            {/* Header Biru Pusmenjar Khas ANBK (Kini Berganti PUSPEN SMK IT LOHIA) */}
+            {/* Header PUSPEN SMK IT LOHIA */}
             <div className="w-full bg-[#1e73be] text-white py-4 px-6 md:px-12 flex justify-between items-center relative z-10 shadow-sm">
               <div className="flex items-center space-x-3">
                 <svg className="w-12 h-12 text-white" viewBox="0 0 100 100" fill="currentColor">
@@ -1081,7 +1091,6 @@ export default function App() {
                       </span>
                     </div>
 
-                    {/* TANGGAL UJIAN (INTEGRASI PENUH DARI PENGATURAN ADMIN) */}
                     <div className="grid grid-cols-4 gap-2 items-center">
                       <span className="font-medium text-slate-500">Tanggal Ujian</span>
                       <span className="font-bold col-span-3 text-slate-900 flex items-center gap-1">
@@ -1118,7 +1127,6 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* MATA UJIAN (INTEGRASI PENUH DARI INPUT ADMIN) */}
                     <div className="grid grid-cols-4 gap-2 items-center">
                       <label className="font-medium text-slate-500">Mata Ujian</label>
                       <select
@@ -1998,7 +2006,7 @@ export default function App() {
                   {/* Daftar Soal */}
                   <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200">
                     <div className="flex justify-between items-center mb-4 pb-2 border-b">
-                      <h3 className="font-bold text-slate-800 text-md">Daftar Hack Bank Soal</h3>
+                      <h3 className="font-bold text-slate-800 text-md">Daftar Aktif Bank Soal</h3>
                       <span className="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-bold">
                         {questions.length} Butir Soal Tersedia
                       </span>
@@ -2259,7 +2267,7 @@ export default function App() {
                           <CreditCard className="w-5 h-5 text-indigo-600" />
                           Kelola & Cetak Kartu Ujian Siswa
                         </h3>
-                        <p className="text-xs text-slate-500 mt-1">Cetak kartu login ujian resmi untuk didistribusikan kepada peserta ujian CBT ANBK.</p>
+                        <p className="text-xs text-slate-500 mt-1">Cetak kartu login ujian resmi untuk didistribusikan kepada peserta ujian CBT.</p>
                       </div>
 
                       <button
@@ -2330,7 +2338,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* C. HASIL & NILAI SISWA (INTEGRAL & PERMANEN) */}
+              {/* C. HASIL & NILAI SISWA */}
               {adminActiveMenu === 'nilai' && (
                 <div className="space-y-6">
                   <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200">
@@ -2603,7 +2611,7 @@ export default function App() {
 
                   {/* Blok Sesi Ujian */}
                   <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200">
-                    <h3 className="text-md font-bold text-slate-800 mb-4 pb-2 border-b flex items-center gap-2">
+                    <h3 className="text-md font-bold text-slate-800 mb-4 pb-2 flex items-center gap-2">
                       <Layers className="w-5 h-5 text-emerald-600" />
                       Manajemen Sesi Ujian (Tersinkronisasi)
                     </h3>
@@ -2659,7 +2667,7 @@ export default function App() {
 
                   {/* Blok Mata Ujian */}
                   <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200">
-                    <h3 className="text-md font-bold text-slate-800 mb-4 pb-2 border-b flex items-center gap-2">
+                    <h3 className="text-md font-bold text-slate-800 mb-4 pb-2 flex items-center gap-2">
                       <FileText className="w-5 h-5 text-indigo-500" />
                       Manajemen Daftar Mata Ujian & Kode Soal
                     </h3>
