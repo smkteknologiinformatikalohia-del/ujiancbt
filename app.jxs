@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT ANBK - SMK Swasta TI Lohia</title>
+    <!-- Load Tailwind CSS & Font -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Load React, ReactDOM, Babel (untuk kompilasi JSX langsung di browser) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.20/babel.min.js"></script>
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-slate-100">
+    <div id="root"></div>
+    <!-- Masukkan seluruh isi kode cbt_anbk_app.jsx Anda ke dalam file terpisah app.jsx atau letakkan langsung di sini -->
+    <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>
